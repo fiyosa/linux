@@ -1,0 +1,31 @@
+setup
+1. install without plugin
+2. manage jenkins -> configure global securiy -> CSRF Protection -> "v" Enable proxy compatibility
+3. manage jenkins -> plugin manager -> Git, Discord Notifier, Role-based Authorization
+4. download install after restart
+5. login
+
+role-assign
+1. manage jenkins -> Configure Global Security -> Authorization -> Role-Based Strategy
+2. manage jenkins -> Manage Users -> create user -> fill form -> create user
+3. manage jenkins -> Manage and Assign Roles 
+   -> Manage Roles -> Role to add -> "user", "guest" 
+   -> add -> LOOK IMAGE "jenkins-create-role.jpg" -> save
+4. manage jenkins -> Manage and Assign Roles -> Assign Roles
+   -> User/group to add -> fill "user", "guest" 
+   -> add -> check "user->user", "guest->guest" -> save
+
+setup git
+1. open github in broser -> setting -> Developer settings 
+   -> Personal access tokens (classic) -> Generate new token -> Generate new token (classic)
+   -> LOOK IMAGE "jenkins-form-github.jpg" -> Generate Token -> copy token
+2. manage jenkins -> Credentials -> (global) -> Add Credentials 
+   -> LOOK IMAGE "jenkins-form-credentials.jpg" -> paste token to password -> Create
+
+
+
+
+
+
+
+

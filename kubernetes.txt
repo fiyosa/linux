@@ -1,0 +1,31 @@
+cd Downloads
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+{
+   minikube start
+   => OR <=
+   minikube start --driver=docker --extra-config=kubeadm.ignore-preflight-errors=NumCPU --force --cpus 1
+}
+
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+kubectl version
+
+=============================================================
+
+# https://github.com/kubernetes/dashboard/releases  =>
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+
+# change service “type” from ClusterIP to NodePort
+kubectl -n kubernetes-dashboard edit svc kubernetes-dashboard
+
+# https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md
+kubectl apply -f - <<EOF
+{script-in-creating-sample-user}
+EOF
+
+kubectl port-forward -n kubernetes-dashboard service/kubernetes-dashboard 32621:443 --address 0.0.0.0
+
+
+
+

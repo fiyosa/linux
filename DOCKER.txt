@@ -1,0 +1,98 @@
+if connection internet slow =>
+sudo nano /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
+"change 3 -> 2"
+
+openSSH =>
+sudo apt update
+sudo apt install openssh-server
+
+check port listener =>
+netstat -anp --inet
+
+ranger => filemanager / fileexplorer
+ncdu > disk usage analyzer
+speedtest-cli --simple => speedtest internet
+df -h => check all storage
+
+check ram & memory =>
+htop
+
+displays information about your system =>
+screenfetch
+
+view IP address =>
+hostname -I
+
+run script after reboot =>
+crontab -e @reboot /home/fys/startup/script.sh
+chmod 755 script.sh
+
+install nodejs 14 =>
+curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash - && \
+sudo apt install -y nodejs
+
+install nvm for nodejs =>
+curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+source ~/.profile 
+
+install jenkins =>
+wget https://get.jenkins.io/war-stable/2.361.2/jenkins.war
+java -jar jenkins.war --httpPort=9090 &
+"https://crontab.guru/" => for check commit git certain time
+
+install docker =>
+sudo usermod -aG docker $USER => for running command docker without "sudo" in openssh
+docker run -u 0 -d \
+	--name portainer \
+	--restart=always \
+	-p 8000:8000 -p 9000:9000 \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	-v ~/docker/portainer:/data \
+	portainer/portainer-ce:alpine
+
+docker run -u 0 -d \
+	--name sonarqube \
+	--restart=always \
+	-p 9999:9000 \
+	-v ~/docker/sonarqube:/opt/sonarqube/data \
+	sonarqube:lts-alpine
+	
+docker run -u 0 -d \
+	--name jenkins \
+	--restart=always \
+	-p 9090:8080 -p 50000:50000 \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	-v ~/docker/jenkins:/var/jenkins_home \
+	jenkins/jenkins:lts
+docker exec -it -u0 jenkins bash
+apt-get update 
+curl https://get.docker.com/ > dockerinstall && chmod 777 dockerinstall && ./dockerinstall
+exit
+sudo chmod 666 /var/run/docker.sock
+	
+docker run -d \
+	--name postgresql \
+	--restart=always \
+	-p 5432:5432 \
+	-v ~/docker/postgresql:/var/lib/postgresql/data \
+	-e POSTGRES_USER=postgres \
+	-e POSTGRES_PASSWORD=Password \
+	postgres:14.5-alpine3.16
+
+docker run -d \
+	--name pgadmin4 \
+	--restart=always \
+	-p 8888:80 \
+	-e "PGADMIN_DEFAULT_EMAIL=fys@gmail.com" \
+	-e "PGADMIN_DEFAULT_PASSWORD=fys" \
+	dpage/pgadmin4
+
+docker run -d \
+	--name mysql \
+	--restart=always \
+	-p 3306:3306 \
+	-v ~/docker/mysql:/var/lib/mysql \
+	-e MYSQL_ROOT_PASSWORD=Password \
+	mysql
+
+

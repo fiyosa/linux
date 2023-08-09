@@ -1,0 +1,24 @@
+docker run -d \
+      	--name openldap-server \
+	--restart=always \
+        -p 389:389 \
+        -p 636:636 \
+        --hostname ldap.com \
+	-e LDAP_ORGANISATION="fiyosa" \
+	-e LDAP_DOMAIN="ldap.com" \
+	-e LDAP_ADMIN_PASSWORD="admin" \
+        -e LDAP_BASE_DN="dc=ldap,dc=com" \
+        -v ~/docker/openldap-server/database:/var/lib/ldap \
+        -v ~/docker/openldap-server/config:/etc/ldap/slapd.d \
+	osixia/openldap:latest
+
+docker run -d \
+	--name phpldapadmin \
+	--restart=always \
+    	-p 10080:80 \
+    	-p 10443:443 \
+    	--hostname phpldapadmin-service \
+    	--link openldap-server:ldap-host \
+    	-e PHPLDAPADMIN_LDAP_HOSTS=ldap.com \
+	-v ~/docker/phpldapadmin:/var/www/phpldapadmin \
+    	osixia/phpldapadmin:latest

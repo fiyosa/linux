@@ -1,0 +1,17 @@
+CREATE SWAP MEMORY =>
+sudo dd if=/dev/zero of=/swap bs=1M count=1024 status=progress
+sudo chmod 600 /swap
+sudo mkswap /swap
+sudo swapon /swap
+
+CHECK SWAP =>
+swapon
+
+CHECK MOMORY (MB) =>
+free -m
+
+TURN OFF SWAP =>
+sudo swapoff /swap
+
+TURN ON SWAP =>
+sudo swapon /swap

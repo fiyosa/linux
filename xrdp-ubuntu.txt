@@ -1,0 +1,6 @@
+sudo apt install xubuntu-desktop
+sudo apt install xrdp
+sudo systemctl status xrdp
+sudo adduser xrdp ssl-cert
+sudo sed -i.bak '/fi/a xfce4-session \n' /etc/xrdp/startwm.sh
+sudo systemctl restart xrdp
