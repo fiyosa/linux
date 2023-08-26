@@ -42,7 +42,7 @@ java -jar jenkins.war --httpPort=9090 &
 
 install docker =>
 sudo usermod -aG docker $USER => for running command docker without "sudo" in openssh
-docker run -u 0 -d \
+docker run -d \
 	--name portainer \
 	--restart=always \
 	-p 8000:8000 -p 9000:9000 \
