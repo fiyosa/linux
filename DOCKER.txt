@@ -50,14 +50,13 @@ docker run -d \
 	-v ~/docker/portainer:/data \
 	portainer/portainer-ce:alpine
 
-docker run -u 0 -d \
+docker run -d \
 	--name sonarqube \
 	--restart=always \
 	-p 9999:9000 \
-	-v ~/docker/sonarqube:/opt/sonarqube/data \
-	sonarqube:lts-alpine
+	sonarqube:lts-community
 	
-docker run -u 0 -d \
+docker run -d \
 	--name jenkins \
 	--restart=always \
 	-p 9090:8080 -p 50000:50000 \
