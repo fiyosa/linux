@@ -1,6 +1,6 @@
 docker run -d \
       	--name openldap-server \
-	--restart=always \
+	--restart=unless-stopped \
         -p 389:389 \
         -p 636:636 \
         --hostname ldap.com \
@@ -14,7 +14,7 @@ docker run -d \
 
 docker run -d \
 	--name phpldapadmin \
-	--restart=always \
+	--restart=unless-stopped \
     	-p 10080:80 \
     	-p 10443:443 \
     	--hostname phpldapadmin-service \

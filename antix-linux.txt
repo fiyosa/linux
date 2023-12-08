@@ -1,0 +1,18 @@
+implement package install suggestion on Debian =>
+sudo apt update -y
+sudo apt install command-not-found -y
+sudo update-command-not-found
+sudo apt update -y
+
+edit wallpaper dekstop =>
+vim ~/.desktop-session/startup     	
+xrandr -s 1280x768			
+
+run script while startup in AntiX Linux =>
+touch ~/startup.sh
+vim ~/.bashrc  				
+~/startup.sh 				
+chmod +x ~/startup.sh
+
+
+

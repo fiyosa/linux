@@ -5,7 +5,7 @@ docker build -t fiyosa/dev-pern-server:v1 .
 
 docker run -d \
 	--name dev-pern-server \
-	--restart=always \
+	--restart=unless-stopped \
 	-p 4000:4000 \
 	-e "DB_HOST=postgresql" \
 	-e "DB_PORT=5432" \
@@ -21,7 +21,7 @@ docker run -d \
 
 docker run -d \
 	--name instagram-client \
-	--restart=always \
+	--restart=unless-stopped \
 	-p 80:80 \
         fiyosa/instagram-client:v1
 	node:14.21.3-alpine3.17

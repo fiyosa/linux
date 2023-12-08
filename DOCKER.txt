@@ -49,16 +49,10 @@ docker run -d \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	-v ~/docker/portainer:/data \
 	portainer/portainer-ce:alpine
-
-docker run -d \
-	--name sonarqube \
-	--restart=always \
-	-p 9999:9000 \
-	sonarqube:lts-community
 	
-docker run -d \
+docker run -u0 -d \
 	--name jenkins \
-	--restart=always \
+	--restart=unless-stopped \
 	-p 9090:8080 -p 50000:50000 \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	-v ~/docker/jenkins:/var/jenkins_home \
@@ -68,10 +62,17 @@ apt-get update
 curl https://get.docker.com/ > dockerinstall && chmod 777 dockerinstall && ./dockerinstall
 exit
 sudo chmod 666 /var/run/docker.sock
+
+docker run -itd \
+	--name acunetix \
+	--restart=unless-stopped \
+	-p 3443:3443 \
+	--cap-add LINUX_IMMUTABLE \
+	secfa/docker-awvs
 	
 docker run -d \
 	--name postgresql \
-	--restart=always \
+	--restart=unless-stopped \
 	-p 5432:5432 \
 	-v ~/docker/postgresql:/var/lib/postgresql/data \
 	-e POSTGRES_USER=postgres \
@@ -80,7 +81,7 @@ docker run -d \
 
 docker run -d \
 	--name pgadmin4 \
-	--restart=always \
+	--restart=unless-stopped \
 	-p 8888:80 \
 	-e "PGADMIN_DEFAULT_EMAIL=fys@gmail.com" \
 	-e "PGADMIN_DEFAULT_PASSWORD=fys" \
@@ -88,7 +89,7 @@ docker run -d \
 
 docker run -d \
 	--name mysql \
-	--restart=always \
+	--restart=unless-stopped \
 	-p 3306:3306 \
 	-v ~/docker/mysql:/var/lib/mysql \
 	-e MYSQL_ROOT_PASSWORD=Password \
