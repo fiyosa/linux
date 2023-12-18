@@ -1,0 +1,13 @@
+--- jmeter for stress test website ---
+
+open link: https://github.com/justb4/docker-jmeter
+
+run: ./build.sh
+
+edit "Makefile" for host, port, threads, targer_path
+edit "Makefile": set TARGET_KEYWORD to ""
+edit "Makefile": set "TEST" for create directory
+edit "test-plan.jmx": remove text "zakelijk" anywhere
+edit "test-plan.jmx": optional add "HTTPSampler.protocol" like "https" or "http"
+
+run: make
