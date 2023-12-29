@@ -12,17 +12,50 @@ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 kubectl version
 
 =============================================================
+Dashboard GUI =>
 
 # https://github.com/kubernetes/dashboard/releases  =>
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
 
 # change service “type” from ClusterIP to NodePort
-kubectl -n kubernetes-dashboard edit svc kubernetes-dashboard
+KUBE_EDITOR="nano" kubectl -n kubernetes-dashboard edit svc kubernetes-dashboard
 
-# https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md
-kubectl apply -f - <<EOF
-{script-in-creating-sample-user}
+# https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md =>
+kubectl apply -f - <<EOF 
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-user
+  namespace: kubernetes-dashboard
 EOF
+
+kubectl apply -f - <<EOF
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: admin-user
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: admin-user
+  namespace: kubernetes-dashboard
+EOF
+
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Secret
+metadata:
+  name: admin-user
+  namespace: kubernetes-dashboard
+  annotations:
+    kubernetes.io/service-account.name: "admin-user"   
+type: kubernetes.io/service-account-token  
+EOF
+
+kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath={".data.token"} | base64 -d
 
 kubectl port-forward -n kubernetes-dashboard service/kubernetes-dashboard 32621:443 --address 0.0.0.0
 

@@ -1,5 +1,5 @@
 CREATE SWAP MEMORY =>
-sudo dd if=/dev/zero of=/swap bs=1M count=1024 status=progress
+sudo dd if=/dev/zero of=/swap bs=1M count=2048 status=progress
 sudo chmod 600 /swap
 sudo mkswap /swap
 sudo swapon /swap
