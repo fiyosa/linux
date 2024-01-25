@@ -13,6 +13,7 @@ ranger => filemanager / fileexplorer
 ncdu > disk usage analyzer
 speedtest-cli --simple => speedtest internet
 df -h => check all storage
+xdg-open <URL> => preview web in terminal
 
 check ram & memory =>
 htop
