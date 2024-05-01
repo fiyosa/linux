@@ -1,0 +1,19 @@
+docker volume create elastic
+	
+docker run -u0 -itd \
+	--name elasticsearch \
+	--restart=unless-stopped \
+	-p 9200:9200 \
+	-e "discovery.type=single-node" \
+	-v elastic:/usr/share/elasticsearch/data \
+	elasticsearch:7.17.20
+
+---
+
+node.name: fys
+http.port: 9200
+path.data: data
+path.logs: logs
+
+cluster.name: fys
+xpack.security.enabled:false

@@ -19,8 +19,8 @@ docker run \
     --rm \
     -e SONAR_HOST_URL="http://192.168.234.128:9999" \
     -e SONAR_SCANNER_OPTS="-Dsonar.projectKey=testing" \
-    -e SONAR_LOGIN="testing" \
-    -v "/home/fys/project/vite/src:/usr/src" \
+    -e SONAR_LOGIN="sqp_0686a613760ffcf589d786e7816388c4bf8f57a0" \
+    -v "/home/fys/projects/vite/src/pages:/usr/src" \
     sonarsource/sonar-scanner-cli
 
 https://docs.sonarsource.com/sonarqube/9.9/analyzing-source-code/scanners/sonarscanner/
