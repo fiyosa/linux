@@ -1,0 +1,10 @@
+docker run -d \
+	--name rabbitmq \
+	--restart=unless-stopped \
+	-p 15672:15672 \
+	-e RABBITMQ_DEFAULT_USER=guest \
+	-e RABBITMQ_DEFAULT_PASS=guest \
+	-v ~/docker/rabbitmq:/var/lib/rabbitmq \
+	rabbitmq:management-alpine
+	
+docker exec -it rabbitmq /bin/bash

@@ -70,52 +70,7 @@ docker run -itd \
 	-p 3443:3443 \
 	--cap-add LINUX_IMMUTABLE \
 	secfa/docker-awvs
-
-docker run -d \
-        --name cronicle \
-        --hostname localhost \
-        -p 3012:3012\
-	--restart=unless-stopped \
-        -v /var/run/docker.sock:/var/run/docker.sock:rw \
-        -v ~/docker/cronicle/data:/opt/cronicle/data:rw \
-        -v ~/docker/cronicle/logs:/opt/cronicle/logs:rw \
-        -v ~/docker/cronicle/plugins:/opt/cronicle/plugins:rw \
-        -v ~/docker/cronicle/lib/docker:/var/lib/docker:rw \
-        -v ~/docker/cronicle/app:/app:rw \
-        bluet/cronicle-docker:latest
-
-docker run -u0 -itd \
-   	--name minio \
-	-p 9001:9001 \
-	--restart=unless-stopped \
-   	-v ~/docker/minio/data:/data \
-   	-e "MINIO_ROOT_USER=admin" \
-   	-e "MINIO_ROOT_PASSWORD=admin123" \
-   	quay.io/minio/minio server /data --console-address ":9001"
 	
-docker run -d \
-	--name postgresql \
-	--restart=unless-stopped \
-	-p 5432:5432 \
-	-v ~/docker/postgresql:/var/lib/postgresql/data \
-	-e POSTGRES_USER=postgres \
-	-e POSTGRES_PASSWORD=Password \
-	postgres:14.5-alpine3.16
 
-docker run -d \
-	--name pgadmin4 \
-	--restart=unless-stopped \
-	-p 8888:80 \
-	-e "PGADMIN_DEFAULT_EMAIL=fys@gmail.com" \
-	-e "PGADMIN_DEFAULT_PASSWORD=fys" \
-	dpage/pgadmin4
-
-docker run -d \
-	--name mysql \
-	--restart=unless-stopped \
-	-p 3306:3306 \
-	-v ~/docker/mysql:/var/lib/mysql \
-	-e MYSQL_ROOT_PASSWORD=Password \
-	mysql
 
 

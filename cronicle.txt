@@ -1,0 +1,15 @@
+docker run -itd \
+        --name cronicle \
+        --hostname localhost \
+		--restart=unless-stopped \
+        -p 3012:3012\
+        -v /var/run/docker.sock:/var/run/docker.sock:rw \
+        -v ~/docker/cronicle/data:/opt/cronicle/data:rw \
+        -v ~/docker/cronicle/logs:/opt/cronicle/logs:rw \
+        -v ~/docker/cronicle/plugins:/opt/cronicle/plugins:rw \
+        -v ~/docker/cronicle/lib/docker:/var/lib/docker:rw \
+        -v ~/docker/cronicle/app:/app:rw \
+        bluet/cronicle-docker:latest
+		
+user: admin
+pass: admin
