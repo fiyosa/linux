@@ -1,0 +1,42 @@
+reference: https://elma365.com/en/help/installing-harbor.html
+
+- install docker dan docker-compose
+- download harbor version offline: https://github.com/goharbor/harbor/releases
+- curl -LO https://github.com/goharbor/harbor/releases/download/v2.11.0/harbor-offline-installer-v2.11.0.tgz
+- tar zxvf harbor-offline-installer-v2.11.0.tgz
+- cd harbor
+- cp harbor.yml.tmpl harbor.yml
+
+- vim harbor.yml
+"""
+	hostname: localhost
+	------------
+	port: 9999
+	------------
+	harbor_admin_password: admin
+"""
+
+-> if dont use https prefer http
+"""
+	# https related config
+	#https:
+		#https port for harbor, default is 443
+	#	port: 443
+		#The path of cert and key files for nginx
+	# 	certificate: /your/certificate/path
+	#	private_key: /your/private/key/path
+		#enable strong ssl ciphers (default: false)
+		# strong_ssl_ciphers: false		
+	------------
+	# Trivy configuration
+	insecure: true
+"""
+
+- sudo ./install.sh
+- http://localhost:9999
+- user: admin <-> pass: admin
+
+- delete: sudo docker-compose down -v
+- re build: sudo docker-compose up -d
+- stop: sudo docker-compose stop
+- start: sudo docker-compose start

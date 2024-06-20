@@ -1,0 +1,6 @@
+docker run -itd \
+	--name acunetix \
+	--restart=unless-stopped \
+	-p 3443:3443 \
+	--cap-add LINUX_IMMUTABLE \
+	secfa/docker-awvs

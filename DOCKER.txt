@@ -13,6 +13,7 @@ ranger => filemanager / fileexplorer
 ncdu > disk usage analyzer
 speedtest-cli --simple => speedtest internet
 df -h => check all storage
+du -sh your-file.txt => check real size file
 xdg-open <URL> => preview web in terminal
 
 check ram & memory =>
@@ -50,26 +51,6 @@ docker run -d \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	-v ~/docker/portainer:/data \
 	portainer/portainer-ce:alpine
-	
-docker run -u0 -d \
-	--name jenkins \
-	--restart=unless-stopped \
-	-p 9090:8080 -p 50000:50000 \
-	-v /var/run/docker.sock:/var/run/docker.sock \
-	-v ~/docker/jenkins:/var/jenkins_home \
-	jenkins/jenkins:lts
-docker exec -it -u0 jenkins bash
-apt-get update 
-curl https://get.docker.com/ > dockerinstall && chmod 777 dockerinstall && ./dockerinstall
-exit
-sudo chmod 666 /var/run/docker.sock
-
-docker run -itd \
-	--name acunetix \
-	--restart=unless-stopped \
-	-p 3443:3443 \
-	--cap-add LINUX_IMMUTABLE \
-	secfa/docker-awvs
 	
 
 
