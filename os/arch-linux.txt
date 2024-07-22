@@ -1,0 +1,121 @@
+# installation arch linux
+ip addr # show list ip for ssh
+passwd # change password root ssh
+
+systemctl mask reflector.service
+pacman -Sy
+pacman -Sy archlinux-keyring
+archinstall
+
+# profile: driver -> vmware / virtualbox
+# configuration network: Use NetworkManager
+# dont add mirror & additional repo..
+
+=============================================
+
+# autologin on XFCE desktop
+
+cat /etc/group | grep autologin
+sudo groupadd -r autologin # if not already present
+sudo gpasswd -a fys autologin # change "fys" to your-user
+sudo nano /etc/lightdm/lightdm.conf
+# search and edit: autologin-user=
+# in nano search (ctrl+w) and next search (alt+w)
+autologin-user=fys
+
+=============================================
+
+# enable ssh
+
+sudo systemctl enable sshd.service
+# show detail ssh system
+cat /usr/lib/systemd/system/sshd.service
+
+=============================================
+
+# add suggestion command terminal
+
+sudo pacman -S pkgfile
+sudo pkgfile --update
+sudo nano ~/.bashrc
+source /usr/share/doc/pkgfile/command-not-found.bash
+sudo reboot now
+
+=============================================
+
+sudo pacman -S tmux screenfetch ranger htop
+
+=============================================
+
+# install crontab
+
+sudo pacman -Syu cronie
+sudo systemctl enable --now cronie.service
+sudo EDITOR=nano crontab -e
+
+=============================================
+
+sudo pacman -S docker docker-compose
+sudo usermod -aG docker $USER
+systemctl enable docker
+systemctl start docker
+
+=============================================
+
+# swap btrfs
+sudo btrfs filesystem mkswapfile --size 2G /swapfile
+sudo swapon swapfile
+sudo nano /etc/fstab
+# add this script
+/swapfile none swap defaults,pri=100 0 0
+
+# swap ext4
+sudo mkswap -U clear --size 2048M --file /swapfile
+sudo swapon /swapfile
+sudo nano /etc/fstab
+# add this script
+/swapfile none swap defaults,pri=100 0 0
+
+# remove swap
+sudo swapoff /swapfile
+sudo rm -rf /swapfile
+sudo nano /etc/fstab # delete: /swapfile....
+
+=============================================
+
+# Enabling multilib
+
+sudo nano /etc/pacman.conf
+# uncheck this script
+[multilib]
+Include = /etc/pacman.d/mirrorlist
+# exit
+sudo pacman -Sy
+
+=============================================
+
+# add root password for sshd
+passwd
+
+# show partition
+lsblk
+
+# manage partition
+cfdisk
+
+# add file system 
+mkfs.fat -F32 /dev/sda1
+mkdir -p /mnt/boot
+mount /dev/sda1 /mnt/boot
+
+mkfs.ext4 /dev/sda2
+mkswap /dev/sda2
+swapon /dev/sda2
+
+mkfs.ext4 /dev/sda3
+mount /dev/sda3 /mnt
+
+=============================================
+# if stuck on "Waiting for automatic mirror selection (reflector) to complete"
+systemctl mask reflector.service
+

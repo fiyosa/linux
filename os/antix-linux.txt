@@ -1,0 +1,77 @@
+# delete software libreoffice 
+sudo apt remove --purge libreoffice*
+sudo apt autoremove
+sudo apt autoclean
+
+# check for any broken packages
+sudo apt --fix-broken install
+
+# delete package broken
+sudo dpkg --remove --force-all {your-app-broken}
+
+=============================================
+
+sudo apt install screenfetch ranger
+sudo apt install docker.io docker-compose 
+sudo apt install gdebi unrar wine wine64 wine32
+
+=============================================
+
+cheat sheet nano:
+esc + shift + s => wrap text
+alt + shift + 4 => wrap text
+alt + shift + 3 => show/hide index line
+
+=============================================
+
+#open manage package
+cli-aptiX
+
+# open service
+sudo sysv-rc-conf
+
+=============================================
+
+nano ~/.icewm/prefoverride
+#Show only icons of running windoes on the toolbar (hide the title)
+TaskbarButtonWidthDivisor=25
+[exit]
+icewm --restart
+
+# edit wallpaper dekstop
+nano ~/.desktop-session/startup
+xrandr -s 1280x768
+
+=============================================
+
+# implement package install suggestion on Debian
+sudo apt update -y
+sudo apt install command-not-found -y
+sudo update-command-not-found
+sudo apt update -y
+
+run script while startup in AntiX Linux =>
+touch ~/startup.sh
+nano ~/.bashrc  				
+~/startup.sh 				
+chmod +x ~/startup.sh
+
+===============================================
+sudo vim /etc/apt/sources.list
+
+# add this script
+deb http://security.debian.org/debian-security bullseye-security main contrib
+deb-src http://security.debian.org/debian-security bullseye-security main contrib
+
+===============================================
+
+https://wiki.winehq.org/Debian
+# if error:  Repo gives error : Certificate is not TRUSTED, just add:
+--no-check-certificate
+
+============================================================
+
+
+
+
+

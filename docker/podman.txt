@@ -1,0 +1,10 @@
+sudo vim /etc/containers/registries.conf
+unqualified-search-registries = ["docker.io"]
+
+podman run -d \
+	--name portainer \
+	--restart=always \
+	--privileged \
+	-p 8000:8000 -p 9000:9000 \
+	-v ~/podman/portainer:/data \
+	docker.io/portainer/portainer-ce:alpine

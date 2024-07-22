@@ -2,6 +2,13 @@ if connection internet slow =>
 sudo nano /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
 "change 3 -> 2"
 
+# Custom aliases
+sudo vim ~/.bashrc
+# example alias
+alias k='kubectl'
+# exit vim
+source ~/.bashrc
+
 openSSH =>
 sudo apt update
 sudo apt install openssh-server
@@ -26,8 +33,10 @@ view IP address =>
 hostname -I
 
 run script after reboot =>
-crontab -e @reboot /home/fys/startup/script.sh
-chmod 755 script.sh
+touch ~/startup.sh
+crontab -e 
+@reboot ~/startup.sh
+chmod 755 ~/startup.sh
 
 install nodejs 14 =>
 curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash - && \
