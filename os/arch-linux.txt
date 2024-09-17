@@ -7,9 +7,11 @@ pacman -Sy
 pacman -Sy archlinux-keyring
 archinstall
 
+# disk configuration: ext4
 # profile: driver -> vmware / virtualbox
 # configuration network: Use NetworkManager
-# dont add mirror & additional repo..
+# dont add mirror & additional repo
+# optional repo: multilab
 
 =============================================
 
@@ -43,7 +45,7 @@ sudo reboot now
 
 =============================================
 
-sudo pacman -S tmux screenfetch ranger htop
+sudo pacman -S tmux screenfetch ranger
 
 =============================================
 

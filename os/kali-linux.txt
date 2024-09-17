@@ -1,0 +1,22 @@
+# enable ssh
+
+sudo systemctl enable ssh
+sudo systemctl start ssh
+
+=============================================
+
+# auto login
+
+sudo nano /etc/lightdm/lightdm.conf
+# search and edit: autologin-user=
+# in nano search (ctrl+w) and next search (alt+w)
+autologin-user=fys
+autologin-user-timeout=0
+
+=============================================
+
+# disable screensaver
+
+setting manager -> Power Manager -> security -> select "Never" & uncheck "lock screen..."
+
+=============================================

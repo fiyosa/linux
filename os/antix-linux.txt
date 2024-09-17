@@ -1,4 +1,6 @@
 # delete software libreoffice 
+sudo apt remove --purge libreoffice* -y && sudo apt autoremove -y && sudo apt autoclean
+
 sudo apt remove --purge libreoffice*
 sudo apt autoremove
 sudo apt autoclean
@@ -11,7 +13,7 @@ sudo dpkg --remove --force-all {your-app-broken}
 
 =============================================
 
-sudo apt install screenfetch ranger
+sudo apt install screenfetch ranger -y
 sudo apt install docker.io docker-compose 
 sudo apt install gdebi unrar wine wine64 wine32
 

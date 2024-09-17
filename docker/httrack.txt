@@ -1,0 +1,6 @@
+# for sucker website all resources like html & css
+
+docker run -it --rm \
+    -v ~/docker/httrack/spike:/app \
+    -e HTTRACK_URI="https://example.com/template" \
+    ralfbs/httrack:latest

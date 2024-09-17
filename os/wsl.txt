@@ -1,0 +1,84 @@
+# https://icreativelabs.com/blog/instalasi-wsl-pada-windows-10-solusi-linux-di-windows
+# https://github.com/microsoft/WSL/releases
+
+# installation
+- open search windows > turn on... > check "windows subsystem for linux" & "Virtual machine platform"
+- restart 
+- open powershell
+
+# change version wsl to 2
+wsl --set-default-version 2
+wsl --update
+
+# show list wsl compatible
+wsl -l -o
+wsl --install -d {Distribution_Name}
+
+# show status wsl
+wsl -l -v
+
+# run ubuntu 22 from cmd (by administrator like powershell)
+wsl -d {Distribution_Name}
+wsl -d Debian
+
+# change version distro from 1 to 2 or other wise
+wsl --set-version {Distribution_Name} 2
+
+# delete distribution linux
+wsl --unregister {Distribution_Name}
+
+# shutdown all
+wsl --shutdown
+
+sudo apt install -y screenfetch ranger htop tmux
+
+================================================
+# setting requirement hardware for wsl 2
+# path: %UserProfile%
+# create file: .wslconfig
+
+[wsl2]
+memory=2GB
+swap=2GB
+processors=1
+#vmIdleTimeout=-1 # force wsl2 alive in the background
+
+================================================
+# error on wsl 2
+# System has not been booted with systemd as init system (PID 1). 
+# Can't operate. Failed to connect to bus: Host is down
+
+sudo nano /etc/resolv.conf
+
+sudo nano /etc/wsl.conf
+# add script below
+[boot]
+systemd=true
+
+================================================
+# Restart Windows Network Services
+# if port windows already exist but not found
+
+net stop winnat
+net start winnat
+
+================================================
+# find port on windows & delete
+
+netstat -ano | findstr :8080
+# change 1234 to your pid
+taskkill /PID 1234 /F 
+
+================================================
+# install golang
+https://go.dev/dl/
+
+cd Downloads
+curl -LO https://go.dev/dl/go1.22.6.linux-amd64.tar.gz
+sudo tar -zxvf go1.22.6.linux-amd64.tar.gz
+sudo mv go /usr/local
+echo export PATH=$HOME/go/bin:/usr/local/go/bin:$PATH >> ~/.profile
+source ~/.profile
+go version
+
+================================================

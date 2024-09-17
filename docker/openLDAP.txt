@@ -1,24 +1,45 @@
 docker run -d \
-      	--name openldap-server \
+    --name openldap-server \
 	--restart=unless-stopped \
-        -p 389:389 \
-        -p 636:636 \
-        --hostname ldap.com \
+	-p 389:389 \
+    -p 636:636 \
+    --hostname ldap.com \
 	-e LDAP_ORGANISATION="fiyosa" \
 	-e LDAP_DOMAIN="ldap.com" \
 	-e LDAP_ADMIN_PASSWORD="admin" \
-        -e LDAP_BASE_DN="dc=ldap,dc=com" \
-        -v ~/docker/openldap-server/database:/var/lib/ldap \
-        -v ~/docker/openldap-server/config:/etc/ldap/slapd.d \
+	-e LDAP_BASE_DN="dc=ldap,dc=com" \
+	-v ~/docker/openldap-server/database:/var/lib/ldap \
+	-v ~/docker/openldap-server/config:/etc/ldap/slapd.d \
 	osixia/openldap:latest
+	
+=============================================
 
 docker run -d \
 	--name phpldapadmin \
 	--restart=unless-stopped \
-    	-p 10080:80 \
-    	-p 10443:443 \
-    	--hostname phpldapadmin-service \
-    	--link openldap-server:ldap-host \
-    	-e PHPLDAPADMIN_LDAP_HOSTS=ldap.com \
+    -p 10080:80 \
+    -p 10443:443 \
+    --hostname phpldapadmin-service \
+    --link openldap-server:ldap-host \
+    -e PHPLDAPADMIN_LDAP_HOSTS=ldap.com \
 	-v ~/docker/phpldapadmin:/var/www/phpldapadmin \
-    	osixia/phpldapadmin:latest
+    osixia/phpldapadmin:stable
+
+docker run -d \
+	--name phpldapadmin \
+	--restart=unless-stopped \
+    -p 10443:443 \
+	-v ~/docker/phpldapadmin:/var/www/phpldapadmin \
+    osixia/phpldapadmin:stable
+
+=============================================
+# add manual server ldap
+
+sudo nano ~/docker/phpldapadmin/config/config.php
+
+# add this script and change your ip server
+$servers->newServer('ldap_pla');  // Create a new server object
+$servers->setValue('server','name','LDAP Server');
+$servers->setValue('server','host','21.25.221.21');
+$servers->setValue('server','port', 10389);  // Specify the custom port
+$servers->setValue('login','bind_id','cn=admin1,dc=example1,dc=org'); // set default 

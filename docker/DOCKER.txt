@@ -1,62 +1,15 @@
-if connection internet slow =>
-sudo nano /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
-"change 3 -> 2"
+# install docker
 
-# Custom aliases
-sudo vim ~/.bashrc
-# example alias
-alias k='kubectl'
-# exit vim
-source ~/.bashrc
+$ install docker
+sudo apt install docker.io docker-compose -y
 
-openSSH =>
-sudo apt update
-sudo apt install openssh-server
-
-check port listener =>
-netstat -anp --inet
-
-ranger => filemanager / fileexplorer
-ncdu > disk usage analyzer
-speedtest-cli --simple => speedtest internet
-df -h => check all storage
-du -sh your-file.txt => check real size file
-xdg-open <URL> => preview web in terminal
-
-check ram & memory =>
-htop
-
-displays information about your system =>
-screenfetch
-
-view IP address =>
-hostname -I
-
-run script after reboot =>
-touch ~/startup.sh
-crontab -e 
-@reboot ~/startup.sh
-chmod 755 ~/startup.sh
-
-install nodejs 14 =>
-curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash - && \
-sudo apt install -y nodejs
-
-install nvm for nodejs =>
-curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-source ~/.profile 
-
-install jenkins =>
-wget https://get.jenkins.io/war-stable/2.361.2/jenkins.war
-java -jar jenkins.war --httpPort=9090 &
-"https://crontab.guru/" => for check commit git certain time
-
-install docker =>
-sudo usermod -aG docker $USER => for running command docker without "sudo" in openssh
-docker run -d \
+#running command docker without "sudo"
+sudo usermod -aG docker $USER
+	
+sudo docker run -d \
 	--name portainer \
 	--restart=always \
-	-p 8000:8000 -p 9000:9000 \
+	-p 19000:9000 \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	-v ~/docker/portainer:/data \
 	portainer/portainer-ce:alpine

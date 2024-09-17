@@ -1,0 +1,9 @@
+docker run -d \
+	--name mailhog \
+	--restart=unless-stopped \
+	-p 8025:8025 \
+	-p 1025:1025 \
+	mailhog/mailhog
+	
+# 8025: gui
+# 1025: store smtp
