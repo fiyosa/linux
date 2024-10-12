@@ -11,8 +11,6 @@ docker run -d \
 	-v ~/docker/openldap-server/database:/var/lib/ldap \
 	-v ~/docker/openldap-server/config:/etc/ldap/slapd.d \
 	osixia/openldap:latest
-	
-=============================================
 
 docker run -d \
 	--name phpldapadmin \
@@ -24,6 +22,9 @@ docker run -d \
     -e PHPLDAPADMIN_LDAP_HOSTS=ldap.com \
 	-v ~/docker/phpldapadmin:/var/www/phpldapadmin \
     osixia/phpldapadmin:stable
+	
+=============================================
+# install just phpldapadmin for remote ldap external
 
 docker run -d \
 	--name phpldapadmin \

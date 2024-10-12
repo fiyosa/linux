@@ -1,0 +1,5 @@
+# open wine
+winecfg
+
+# uninstall program
+wine uninstaller

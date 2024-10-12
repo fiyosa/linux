@@ -19,13 +19,6 @@ sudo apt install gdebi unrar wine wine64 wine32
 
 =============================================
 
-cheat sheet nano:
-esc + shift + s => wrap text
-alt + shift + 4 => wrap text
-alt + shift + 3 => show/hide index line
-
-=============================================
-
 #open manage package
 cli-aptiX
 

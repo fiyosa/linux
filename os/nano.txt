@@ -1,0 +1,27 @@
+# open file:
+nano nameFile.txt
+
+# save file
+ctrl + s
+
+# exit file
+ctrl + x
+
+# enable / disable color
+alt + y
+
+# show/hide index line
+alt + shift + 3 
+
+# search
+ctrl + w
+
+# search - next
+alt + w
+
+# search - previous
+alt + q
+
+# wrap text
+alt + shift + 4
+esc + shift + s

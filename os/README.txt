@@ -42,6 +42,22 @@ screenfetch
 # view IP address
 hostname -I
 
+# share folder vmware
+vmware-hgfsclient # check name sharing folder 
+sudo nano /etc/fstab
+vmhgfs-fuse    /mnt/hgfs    fuse    defaults,allow_other    0    0
+{exit}
+sudo mkdir /mnt/hgfs
+sudo mount -a
+cd /mnt/hgfs
+
+# new line on command terminal
+nano ~/.bashrc
+## change all: PS1='...\w...'
+PS1='...\w\n...'
+exit
+source ~/.bashrc
+
 # run script after reboot
 touch ~/startup.sh
 crontab -e 
