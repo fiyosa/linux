@@ -1,0 +1,44 @@
+docker run -d \
+	--name aapanel \
+	--restart=unless-stopped \
+	-p 7800:7800 \
+	-p 23:21 \
+	-p 4443:443 \
+	-p 8080:80 \
+	-p 888:888 \
+	-v ~/docker/aapanel/website_data:/www/wwwroot \
+	-v ~/docker/aapanel/mysql_data:/www/server/data \
+	-v ~/docker/aapanel/vhost:/www/server/panel/vhost \
+	sheid1309/aapanel
+	aapanel/aapanel:lnmp
+	
+# access url
+0.0.0.0:7800/aapanel
+
+# login
+aapanel
+aapanel123
+
+URL=https://www.aapanel.com/script/install_7.0_en.sh && if [ -f /usr/bin/curl ];then curl -ksSO "$URL" ;else wget --no-check-certificate -O install_7.0_en.sh "$URL";fi;bash install_7.0_en.sh aapanel
+
+==========================
+# install by script manually
+h5ulrgco
+e166aad1
+
+# ==========================================
+docker run -d \
+	--name portainer \
+	--restart=always \
+	-p 9000:9000 \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	-v /www/docker/portainer:/data \
+	portainer/portainer-ce:alpine
+	
+docker run -u0 -d \
+	--name jenkins \
+	--restart=unless-stopped \
+	-p 9090:8080 \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	-v /www/docker/jenkins:/var/jenkins_home \
+	jenkins/jenkins:lts

@@ -9,7 +9,7 @@ sudo usermod -aG docker $USER
 sudo docker run -d \
 	--name portainer \
 	--restart=always \
-	-p 19000:9000 \
+	-p 9000:9000 \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	-v ~/docker/portainer:/data \
 	portainer/portainer-ce:alpine

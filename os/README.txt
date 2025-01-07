@@ -51,12 +51,40 @@ sudo mkdir /mnt/hgfs
 sudo mount -a
 cd /mnt/hgfs
 
+# ==============================================================
+
 # new line on command terminal
 nano ~/.bashrc
 ## change all: PS1='...\w...'
 PS1='...\w\n...'
 exit
 source ~/.bashrc
+
+PS1="\[\e[1;32m\]┌──(\u@\h)-[\[\e[1;36m\]\w\[\e[1;32m\]]\n└─\[\e[m\]\$ "
+
+# ==============================================================
+
+# configuration firewall 
+
+# list port
+sudo ufw status verbose
+
+# add rule port
+sudo ufw allow in 22/tcp
+
+# delete rule port
+sudo ufw delete 9090
+
+# block rule port
+sudo ufw deny 9090
+
+# restart 
+sudo ufw reload
+
+# block spesific ip
+sudo ufw deny from 192.168.234.161 to any port 9090
+
+# ==============================================================
 
 # run script after reboot
 touch ~/startup.sh

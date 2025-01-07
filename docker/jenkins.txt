@@ -1,7 +1,7 @@
 docker run -u0 -d \
 	--name jenkins \
 	--restart=unless-stopped \
-	-p 9090:8080 -p 50000:50000 \
+	-p 9090:8080 \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	-v ~/docker/jenkins:/var/jenkins_home \
 	jenkins/jenkins:lts

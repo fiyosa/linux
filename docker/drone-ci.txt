@@ -1,0 +1,27 @@
+docker pull drone/drone:2
+docker pull drone/drone-runner-docker:1
+
+docker run -d \
+  --name drone \
+  --restart unless-stopped \
+  -p 9080:80 \
+  -p 4443:443 \
+  -v ~/docker/drone:/data \
+  -e DRONE_SERVER_HOST=192.168.234.165:9080 \
+  -e DRONE_SERVER_PROTO=http \
+  -e DRONE_GITHUB_CLIENT_ID=your-id \
+  -e DRONE_GITHUB_CLIENT_SECRET=your-secret \
+  -e DRONE_RPC_SECRET=super-duper-secret \
+  drone/drone:2.24.0
+  
+docker run -d \
+  --name drone-runner \
+  --restart unless-stopped \
+  -p 8080:8080 \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -e DRONE_RPC_HOST=192.168.234.165:9080 \
+  -e DRONE_RPC_PROTO=http \
+  -e DRONE_RPC_SECRET=super-duper-secret \
+  -e DRONE_RUNNER_CAPACITY=2 \
+  -e DRONE_RUNNER_NAME=golang-fiber-react \
+  drone/drone-runner-docker:1.8.3

@@ -1,0 +1,47 @@
+# shutdown & reboot
+
+systemctl poweroff
+systemctl reboot
+
+# ==============================================================
+
+# install sudo
+su -
+apt install sudo
+usermod -aG sudo fys
+systemctl reboot
+sudo whoami
+
+which sudo
+echo $PATH
+nano ~/.bashrc
+PATH=$PATH:usr/bin:
+
+# ==============================================================
+
+# autologin
+sudo mkdir -p /etc/systemd/system/getty@tty1.service.d
+sudo nano /etc/systemd/system/getty@tty1.service.d/override.conf
+
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin fys --noclear %I $TERM
+
+sudo systemctl daemon-reload
+sudo systemctl restart getty@tty1
+
+# ==============================================================
+
+# implement package install suggestion on Debian
+apt install -y command-not-found ranger htop screenfetch  tmux
+apt update -y
+update-command-not-found
+apt update -y
+systemctl reboot
+
+# ==============================================================
+
+# edit terminal
+nano ~/.bashrc
+PS1="\[\e[1;32m\]┌──(\u@\h)-[\[\e[1;36m\]\w\[\e[1;32m\]]\n└─\[\e[m\]\$ "
+source ~/.bashrc
