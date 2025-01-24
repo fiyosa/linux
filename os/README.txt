@@ -2,6 +2,11 @@
 sudo nano /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
 "change 3 -> 2"
 
+# test connection & check server
+https://bench.sh/
+wget -qO- bench.sh | bash
+curl -Lso- bench.sh | bash
+
 # test connection
 ping -c 4 google.com
 
@@ -92,9 +97,54 @@ crontab -e
 @reboot ~/startup.sh
 chmod 755 ~/startup.sh
 
+# ==============================================================
+
 # install nvm for nodejs
 curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 source ~/.profile 
+
+# ==============================================================
+
+# install php and switch version
+sudo apt install -y lsb-release apt-transport-https ca-certificates
+sudo wget -qO /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/php.list
+
+sudo apt update
+# if you want install composer then skip install php8.4
+sudo apt install -y php8.4 
+
+sudo update-alternatives --config php
+
+# ==============================================================
+
+# install composer
+sudo apt install php-cli unzip curl -y
+curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+composer --version
+sudo apt install -y php-mbstring php-xml php-curl php-sqlite3 php-mysql php-pgsql
+
+# ==============================================================
+
+# install neovim / nvim
+- install git & nodejs
+git clone https://github.com/LazyVim/starter ~/.config/nvim
+rm -rf ~/.config/nvim/.git
+sudo apt install fzf ripgrep
+nvim -v
+- edit: theme & visile file
+
+# install font (optional but exists bugs)
+cd downloads 
+curl -LO https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/JetBrainsMono.zip
+unzip JetBrainsMono.zip -d JetBrainsMono
+mkdir -p ~/.local/share/fonts
+cp JetBrainsMono/*.ttf ~/.local/share/fonts
+fc-cache -fv
+fc-list | grep "Nerd Font"
+
+# ==============================================================
 
 # install jenkins
 wget https://get.jenkins.io/war-stable/2.361.2/jenkins.war

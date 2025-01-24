@@ -1,3 +1,26 @@
+# antix core
+cli-installer
+-> select "dos"
+-> don't create swap
+-> just enter
+
+# autologin
+sudo vim /etc/inittab
+1:2345:respawn:/bin/login -f fys tty1 </dev/tty1 >/dev/tty1 2>&1
+exit
+reboot
+
+# swap
+sudo dd if=/dev/zero of=/swapfile bs=1M count=2048
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+sudo vim /etc/fstab
+/swapfile none swap sw 0 0
+htop
+
+=============================================
+
 # delete software libreoffice 
 sudo apt remove --purge libreoffice* -y && sudo apt autoremove -y && sudo apt autoclean
 
@@ -13,9 +36,18 @@ sudo dpkg --remove --force-all {your-app-broken}
 
 =============================================
 
-sudo apt install screenfetch ranger -y
-sudo apt install docker.io docker-compose 
+sudo apt install screenfetch ranger tmux -y
 sudo apt install gdebi unrar wine wine64 wine32
+
+sudo apt install -y docker.io docker-compose 
+sudo usermod -aG docker $USER
+sudo docker run -d \
+	--name portainer \
+	--restart=always \
+	-p 9000:9000 \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	-v ~/docker/portainer:/data \
+	portainer/portainer-ce:alpine
 
 =============================================
 
