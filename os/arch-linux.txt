@@ -2,6 +2,57 @@
 ip addr # show list ip for ssh
 passwd # change password root ssh
 
+=============================================
+
+https://youtu.be/mWl4P6DOt9M?si=UsOz6VKU2In5ZN1o
+
+# setup archinstall
+setfont ter-132n # increase size font (optional)
+pacman -Sy && pacman -Sy --noconfirm archlinux-keyring && pacman -Sy --noconfirm archinstall
+
+lsblk # show all partition
+cfdisk /dev/sda # ex.: cfdisk /dev/{disk}
+# select gpt
+# setting:
++-----------+----------+---------+---------+-------+-------------------------+
+| Device    | Start    | End     | Sectors | Size  | Type                    |
++-----------+----------+---------+---------+-------+-------------------------+
+| /dev/sda1 |     2048 |   12287 |   10240 |   5M  | BIOS Boot               |
+| /dev/sda2 |    12288 |  626687 |  614400 | 300M  | EFI System              |
+| /dev/sda3 |   626688 | 4820991 | 4194304 |   2G  | Linux Swap              |
+| /dev/sda4 |  4820992 |62912511 |58091520 | 27.7G | Linux Root (x86-64)     |
++-----------+----------+---------+---------+-------+-------------------------+
+
+fdisk -l # show detail partition
+lsblk
+
+# create file system
+mkfs.fat -F32 /dev/sda2
+mkfs.ext4 /dev/sda4
+
+# create mountpoints
+mount /dev/sda4 /mnt
+mkdir /mnt/boot
+mount /dev/sda2 /mnt/boot
+
+# show
+lsblk -f
+
+# optional if you create swap file
+mkfs.ext4 /dev/sda3
+mkswap /dev/sda3
+swapon /dev/sda3
+
+archinstall
+
+# Disk configuration -> Pre-mounted configuration -> /mnt
+# Profile: driver -> vmware / virtualbox
+# audio -> pipewire
+# Network configuration -> Use NetworkManager
+# Optional repo: multilab
+
+=============================================
+
 systemctl mask reflector.service
 pacman -Sy
 pacman -Sy archlinux-keyring
@@ -14,6 +65,9 @@ archinstall
 # optional repo: multilab
 
 =============================================
+
+# autologin lxqt
+cp /usr/lib/systemd/system/getty@.service /etc/systemd/system/autologin@.service
 
 # autologin on XFCE desktop
 
@@ -99,11 +153,17 @@ sudo pacman -Sy
 # add root password for sshd
 passwd
 
-# show partition
+# show list partition
 lsblk
 
 # manage partition
 cfdisk
+
+# show all detail partition
+fdisk -l
+
+# select partition
+fdisk /dev/sda1
 
 # add file system 
 mkfs.fat -F32 /dev/sda1

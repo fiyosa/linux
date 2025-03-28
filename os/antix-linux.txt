@@ -6,6 +6,7 @@ cli-installer
 
 # autologin
 sudo vim /etc/inittab
+# search and change: 1:2345:respawn:/sbin/getty --noclear 38400 tty1
 1:2345:respawn:/bin/login -f fys tty1 </dev/tty1 >/dev/tty1 2>&1
 exit
 reboot

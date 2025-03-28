@@ -1,0 +1,15 @@
+https://flatpak.org/setup/Debian
+
+# all app: https://flathub.org/
+# install app warehouse
+# cd /usr/share/applications
+# touch warehouse.desktop
+# vim warehouse.desktop
+[Desktop Entry]
+Name=Warehouse
+Exec=flatpak run io.github.flattool.Warehouse
+Icon=/var/lib/flatpak/app/io.github.flattool.Warehouse/x86_64/stable/c224ea35508c4cec63b889dfd612f6041279068cea638654e52ce8c4bbe17388/export/share/icons/hicolor/scalable/apps/io.github.flattool.Warehouse.svg
+Type=Application
+Categories=Utility;
+
+# permission execute: chmod +x warehouse.desktop

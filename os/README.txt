@@ -58,6 +58,15 @@ cd /mnt/hgfs
 
 # ==============================================================
 
+# Apache Benchmark for test concurrency web api
+sudo apt install apache2-utils
+ab -n 1000 -c 1000 http://example.com/
+
+-n 1000 : total request
+-c 1000 : total users
+
+# ==============================================================
+
 # new line on command terminal
 nano ~/.bashrc
 ## change all: PS1='...\w...'
