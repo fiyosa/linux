@@ -4,15 +4,36 @@ passwd # change password root ssh
 
 =============================================
 
+# installation
 https://youtu.be/mWl4P6DOt9M?si=UsOz6VKU2In5ZN1o
 
 # setup archinstall
-setfont ter-132n # increase size font (optional)
+setfont -d # increase size font (optional)
 pacman -Sy && pacman -Sy --noconfirm archlinux-keyring && pacman -Sy --noconfirm archinstall
 
 lsblk # show all partition
-cfdisk /dev/sda # ex.: cfdisk /dev/{disk}
-# select gpt
+cfdisk /dev/sda # ex.: cfdisk /dev/{partition}
+
+# select gpt (UEFI)
+# setting:
++-----------+----------+---------+---------+-------+-------------------------+
+| Device    | Start    | End     | Sectors | Size  | Type                    |
++-----------+----------+---------+---------+-------+-------------------------+
+| /dev/sda1 |    12288 |  626687 |  614400 | 300M  | EFI System              |
+| /dev/sda2 |   626688 | 4820991 | 4194304 |   2G  | Linux Swap              |
+| /dev/sda3 |  4820992 |62912511 |58091520 | 27.7G | Linux filesystem        |
++-----------+----------+---------+---------+-------+-------------------------+
+
+# select dos (mode Legacy / BIOS)
+# setting:
++------------+--------+------------+------------+------------+------+-------------------------+
+|  Device    | Boot   |   Start    |    End     |  Sectors   | Size | Type                    |
++------------+--------+------------+------------+------------+------+-------------------------+
+| /dev/sda1  |        |      2048  |   4196351  |   4194304  |  2G  | Linux swap / Solaris    |
+| /dev/sda2  |   *    |   4196352  |  62914559  |  58718208  | 28G  | Linux                   |
++------------+--------+------------+------------+------------+------+-------------------------+
+
+# select gpt (mode Legacy / BIOS)
 # setting:
 +-----------+----------+---------+---------+-------+-------------------------+
 | Device    | Start    | End     | Sectors | Size  | Type                    |
@@ -20,28 +41,27 @@ cfdisk /dev/sda # ex.: cfdisk /dev/{disk}
 | /dev/sda1 |     2048 |   12287 |   10240 |   5M  | BIOS Boot               |
 | /dev/sda2 |    12288 |  626687 |  614400 | 300M  | EFI System              |
 | /dev/sda3 |   626688 | 4820991 | 4194304 |   2G  | Linux Swap              |
-| /dev/sda4 |  4820992 |62912511 |58091520 | 27.7G | Linux Root (x86-64)     |
+| /dev/sda4 |  4820992 |62912511 |58091520 | 27.7G | Linux filesystem        |
 +-----------+----------+---------+---------+-------+-------------------------+
 
 fdisk -l # show detail partition
 lsblk
 
 # create file system
-mkfs.fat -F32 /dev/sda2
-mkfs.ext4 /dev/sda4
+mkfs.fat -F32 /dev/sda1
+mkfs.ext4 /dev/sda3
 
 # create mountpoints
-mount /dev/sda4 /mnt
-mkdir /mnt/boot
-mount /dev/sda2 /mnt/boot
+mount /dev/sda3 /mnt
+mkdir -p /mnt/boot
+mount /dev/sda1 /mnt/boot
 
 # show
 lsblk -f
 
 # optional if you create swap file
-mkfs.ext4 /dev/sda3
-mkswap /dev/sda3
-swapon /dev/sda3
+mkswap /dev/sda2
+swapon /dev/sda2
 
 archinstall
 
@@ -53,16 +73,9 @@ archinstall
 
 =============================================
 
-systemctl mask reflector.service
-pacman -Sy
-pacman -Sy archlinux-keyring
-archinstall
-
-# disk configuration: ext4
-# profile: driver -> vmware / virtualbox
-# configuration network: Use NetworkManager
-# dont add mirror & additional repo
-# optional repo: multilab
+pacman -Ss nama_package # search package on repo
+pacman -Qs nama_package # search package
+pacman -Rns nama_package # delete package
 
 =============================================
 
@@ -93,13 +106,14 @@ cat /usr/lib/systemd/system/sshd.service
 
 sudo pacman -S pkgfile
 sudo pkgfile --update
-sudo nano ~/.bashrc
+sudo vim ~/.bashrc
 source /usr/share/doc/pkgfile/command-not-found.bash
+source ~/.bashrc
 sudo reboot now
 
 =============================================
 
-sudo pacman -S tmux screenfetch ranger
+sudo pacman -S tmux fastfetch ranger git
 
 =============================================
 
@@ -147,6 +161,19 @@ sudo nano /etc/pacman.conf
 Include = /etc/pacman.d/mirrorlist
 # exit
 sudo pacman -Sy
+
+=============================================
+
+# format full disk
+umount /dev/sdaX
+wipefs -af /dev/sda 
+
+=============================================
+
+# change label disk (MBR | GPT)
+parted /dev/sda # ex. parted /dev/sdX
+mklabel gpt     (or)      mklabel msdos
+quit
 
 =============================================
 
