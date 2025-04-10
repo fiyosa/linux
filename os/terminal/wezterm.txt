@@ -12,6 +12,7 @@ return {
   color_scheme = "Catppuccin Mocha",
   initial_cols = 70,
   initial_rows = 21,
+  window_close_confirmation = "NeverPrompt", -- NeverPrompt / AlwaysPrompt / PromptOnProcesses
   
   default_prog = { "C:\\Program Files\\Git\\bin\\bash.exe", "--login", "-i" },
 }
