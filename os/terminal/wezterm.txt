@@ -10,6 +10,8 @@ return {
   font = wezterm.font("JetBrainsMono Nerd Font"),
   font_size = 9.5,
   color_scheme = "Catppuccin Mocha",
+  initial_cols = 70,
+  initial_rows = 21,
   
   default_prog = { "C:\\Program Files\\Git\\bin\\bash.exe", "--login", "-i" },
 }

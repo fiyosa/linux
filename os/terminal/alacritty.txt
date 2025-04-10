@@ -1,0 +1,58 @@
+# C:\Users\fys\AppData\Roaming\alacritty\alacritty.toml
+
+# ====================================
+# Alacritty Config (TOML Format)
+# Valid as of Alacritty 0.13+
+# ====================================
+
+# == Window Settings ==
+[window]
+dimensions = { columns = 80, lines = 25 }
+startup_mode = "Windowed"
+
+# == Font Settings ==
+[font]
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+size = 9.5
+builtin_box_drawing = true
+
+# == Cursor Settings ==
+[cursor]
+style = { shape = "Beam", blinking = "On" }  # BlinkingBar in TOML versi baru
+
+# == Shell Settings ==
+[terminal]
+shell = { program = "C:\\Program Files\\Git\\bin\\bash.exe", args = ["--login", "-i"] }
+
+# == Colors (Catppuccin Mocha) ==
+[colors.primary]
+background = "#1e1e2e"
+foreground = "#cdd6f4"
+
+[colors.cursor]
+text = "#1e1e2e"
+cursor = "#f5e0dc"
+
+[colors.selection]
+text = "#1e1e2e"
+background = "#f5e0dc"
+
+[colors.normal]
+black   = "#45475a"
+red     = "#f38ba8"
+green   = "#a6e3a1"
+yellow  = "#f9e2af"
+blue    = "#89b4fa"
+magenta = "#f5c2e7"
+cyan    = "#94e2d5"
+white   = "#bac2de"
+
+[colors.bright]
+black   = "#585b70"
+red     = "#f38ba8"
+green   = "#a6e3a1"
+yellow  = "#f9e2af"
+blue    = "#89b4fa"
+magenta = "#f5c2e7"
+cyan    = "#94e2d5"
+white   = "#a6adc8"
