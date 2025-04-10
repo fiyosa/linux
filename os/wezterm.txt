@@ -6,7 +6,7 @@
 local wezterm = require("wezterm")
 
 return {
-  default_cursor_style = "SteadyBar",
+  default_cursor_style = "SteadyBar", --  BlinkingBar or SteadyBar
   font = wezterm.font("JetBrainsMono Nerd Font"),
   font_size = 9.5,
   color_scheme = "Catppuccin Mocha",
