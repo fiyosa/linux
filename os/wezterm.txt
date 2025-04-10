@@ -1,0 +1,39 @@
+# terminal
+
+## edit style
+# create file on C:\Users\{user} => .wezterm.lua
+-----------------Add-----------------
+local wezterm = require("wezterm")
+
+return {
+  default_cursor_style = "SteadyBar",
+  font = wezterm.font("JetBrainsMono Nerd Font"),
+  font_size = 9.5,
+  color_scheme = "Catppuccin Mocha",
+  
+  default_prog = { "C:\\Program Files\\Git\\bin\\bash.exe", "--login", "-i" },
+}
+-----------------End-----------------
+
+# open git bash
+vim ~/.bashrc
+-----------------Add-----------------
+git_branch() {
+    local branch
+    branch=$(git branch --no-color 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+    if [ -n "$branch" ]; then
+        echo "-(\[\e[0;34m\]$branch\[\e[0;32m\])"
+    fi
+}
+
+PS1="\[\e[0;32m\]┌──(\[\e[0;36m\]\u\[\e[0;32m\]@\[\e[0;35m\]\h\[\e[0;32m\])-[\[\e[0;33m\]\w\[\e[0;32m\]]$(git_branch)\n└─\[\e[0m\]\$ "
+-----------------End-----------------
+source .bashrc
+# open file C:\Users\{user}\.bash_profile
+-----------------Add-----------------
+if [ -f ~/.bashrc ]; then
+  . ~/.bashrc
+fi
+-----------------End-----------------
+
+## finish

@@ -76,6 +76,16 @@ source ~/.bashrc
 
 PS1="\[\e[1;32m\]┌──(\u@\h)-[\[\e[1;36m\]\w\[\e[1;32m\]]\n└─\[\e[m\]\$ "
 
+git_branch() {
+    local branch
+    branch=$(git branch --no-color 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+    if [ -n "$branch" ]; then
+        echo "-(\[\e[0;34m\]$branch\[\e[0;32m\])"
+    fi
+}
+PS1="\[\e[0;32m\]┌──(\[\e[0;36m\]\u\[\e[0;32m\]@\[\e[0;35m\]\h\[\e[0;32m\])-[\[\e[0;33m\]\w\[\e[0;32m\]]$(git_branch)\n└─\[\e[0m\]\$ "
+
+
 # ==============================================================
 
 # configuration firewall 
