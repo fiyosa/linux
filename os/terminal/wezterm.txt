@@ -22,8 +22,13 @@ return {
 vim ~/.bashrc
 -----------------Add-----------------
 git_branch() {
+    if ! command -v git &> /dev/null; then
+        return
+    fi
+
     local branch
     branch=$(git branch --no-color 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+    
     if [ -n "$branch" ]; then
         echo "-(\[\e[0;34m\]$branch\[\e[0;32m\])"
     fi
