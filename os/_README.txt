@@ -1,3 +1,12 @@
+# vmware error "No 3D support"
+
+# open folder C:\Users\${HOME}\Documents\Virtual Machines\{your distro}
+# open & edit file .vmx then add this script
+mks.enableDX11Renderer = "FALSE"
+mks.enableGLRenderer = "TRUE"
+
+============================================
+
 # if connection internet slow on lubuntu
 sudo nano /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
 "change 3 -> 2"
@@ -77,8 +86,13 @@ source ~/.bashrc
 PS1="\[\e[1;32m\]┌──(\u@\h)-[\[\e[1;36m\]\w\[\e[1;32m\]]\n└─\[\e[m\]\$ "
 
 git_branch() {
+    if ! command -v git &> /dev/null; then
+        return
+    fi
+
     local branch
     branch=$(git branch --no-color 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+    
     if [ -n "$branch" ]; then
         echo "-(\[\e[0;34m\]$branch\[\e[0;32m\])"
     fi
