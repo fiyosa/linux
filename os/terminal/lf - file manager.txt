@@ -1,0 +1,16 @@
+# quit on windows latest directory
+
+# add on ~/.bashrc
+lfcd() {
+    tmpfile="$HOME/.cache/lf/lastdir"
+    mkdir -p "$(dirname "$tmpfile")"
+    lf -last-dir-path="$tmpfile" "$@"
+    if [ -f "$tmpfile" ]; then
+        dir=$(cat "$tmpfile")
+        [ -d "$dir" ] && cd "$dir"
+    fi
+}
+
+# exit
+# source ~/.bashrc
+# test: lfcd
