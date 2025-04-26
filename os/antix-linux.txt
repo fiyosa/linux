@@ -1,5 +1,7 @@
 # antix core
+-> user: root => pass: root
 cli-installer
+-> repartition: y
 -> select "dos"
 -> don't create swap
 -> just enter

@@ -6,7 +6,7 @@
 local wezterm = require("wezterm")
 
 return {
-  default_cursor_style = "SteadyBar", --  BlinkingBar or SteadyBar
+  default_cursor_style = "BlinkingBar", --  BlinkingBar or SteadyBar
   font = wezterm.font("JetBrainsMono Nerd Font"),
   font_size = 9.5,
   color_scheme = "Catppuccin Mocha",
@@ -21,15 +21,21 @@ return {
 # open git bash
 vim ~/.bashrc
 -----------------Add-----------------
-git_branch() {
+_git_branch() {
     if ! command -v git &>/dev/null || ! git rev-parse --is-inside-work-tree &>/dev/null; then
         return
     fi
     local branch=$(git branch --show-current 2>/dev/null)
     [ -n "$branch" ] && echo "-(\[\e[0;34m\]$branch\[\e[0;32m\])"
 }
+_get_ip() {
+  local ip
+  ip=$(ip -4 -o a show scope global 2>/dev/null | awk '{print $4}' | cut -d/ -f1 | head -n1)
+  #[[ -z "$ip" ]] && ip="localhost"
+  echo "${ip:-$(hostname)}"
+}
 _update_branch() {
-	PS1="\[\e[0;32m\]┌──(\[\e[0;36m\]\u\[\e[0;32m\]@\[\e[0;35m\]\h\[\e[0;32m\])-[\[\e[0;33m\]\w\[\e[0;32m\]]$(git_branch)\n└─\[\e[0m\]\$ "
+	PS1="\[\e[0;32m\]┌──(\[\e[0;36m\]\u\[\e[0;32m\]@\[\e[0;35m\]$(_get_ip)\[\e[0;32m\])-[\[\e[0;33m\]\w\[\e[0;32m\]]$(_git_branch)\n└─\[\e[0m\]\$ "
 }
 PROMPT_COMMAND='_update_branch'
 -----------------End-----------------
