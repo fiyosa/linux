@@ -78,6 +78,14 @@ pacman -Qs nama_package # search package
 pacman -Rns nama_package # delete package
 
 =============================================
+# fix dual boot
+
+vim /etc/default/grub
+GRUB_DISABLE_OS_PROBER=false  # uncomment then exit
+os-prober
+grub-mkconfig -o /boot/grub/grub.cfg
+
+=============================================
 
 # autologin lxqt
 cp /usr/lib/systemd/system/getty@.service /etc/systemd/system/autologin@.service

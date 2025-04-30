@@ -23,6 +23,12 @@ sudo vim /etc/fstab
 htop
 
 =============================================
+# shared_folder vmware
+vmware-hgfsclient # check if not found
+-> sudo apt install -y open-vm-tools
+sudo vmhgfs-fuse .host:/shared_folder ~/shared_folder -o allow_other -o uid=$(id -u) -o gid=$(id -g)
+echo ".host:/shared_folder  /home/$(whoami)/shared_folder  fuse.vmhgfs-fuse  defaults,allow_other,uid=$(id -u),gid=$(id -g)  0  0" | sudo tee -a /etc/fstab
+=============================================
 
 # delete software libreoffice 
 sudo apt remove --purge libreoffice* -y && sudo apt autoremove -y && sudo apt autoclean
