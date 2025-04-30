@@ -1,0 +1,40 @@
+=============================================
+# fix dual boot where boot windows not found
+
+vim /etc/default/grub
+GRUB_DISABLE_OS_PROBER=false  # uncomment then exit
+os-prober
+pacman -S fuse3 # if os-prober not detected boot windows, retry os-prober
+grub-mkconfig -o /boot/grub/grub.cfg
+
+# optional 
+vim /etc/default/grub
+GRUB_DEFAULT=2 # boot priority to windows
+GRUB_TIMEOUT=10
+
+=============================================
+# remove dual boot, just windows!
+
+# mbr (bios)
+# delete partition on disk management
+# open cmd (admin)
+bootsect /nt60 C: /mbr  # bootsect /nt60 <drive name> /mbr
+
+# gpt (UEFI)
+# open cmd (admin)
+diskpart
+list disk
+sel disk X # change X with where drive boot
+list vol # see all partition (volumes) on disk
+sel vol X # change X with EFI volume (FAT32)
+assign letter=Z:
+exit
+Z:
+dir
+cd EFI
+ls
+rmdir /S ubuntu # change ubuntu with os that you want to delete
+# type "y" if confirm delete
+remove letter=Z
+
+=============================================
