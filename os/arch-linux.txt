@@ -83,7 +83,13 @@ pacman -Rns nama_package # delete package
 vim /etc/default/grub
 GRUB_DISABLE_OS_PROBER=false  # uncomment then exit
 os-prober
+pacman -S fuse3 # if os-prober not detected boot windows, retry os-prober
 grub-mkconfig -o /boot/grub/grub.cfg
+
+# optional 
+vim /etc/default/grub
+GRUB_DEFAULT=2 # boot priority to windows
+GRUB_TIMEOUT=10
 
 =============================================
 
