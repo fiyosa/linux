@@ -60,6 +60,7 @@ inactive           (Matikan status Active)
 dir C:\bootmgr
 dir C:\Windows\System32\winload.exe
 bcdedit /enum # Pastikan hanya ada entri Windows Boot Manager. 
+bcdedit /v # Pastikan hanya ada entri Windows Boot Manager. 
 
 =============================================
 # (GPT) remove dual boot, just windows!
