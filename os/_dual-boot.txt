@@ -25,6 +25,8 @@ diskpart
 list disk
 select disk X # change 'X' with disk boot
 list partition
+
+# lakukan di setiap partisi cuma hanya boleh windows saja yg "Active: Yes"
 select partition X # change 'X' with partition windows
 detail partition
 
@@ -43,6 +45,15 @@ Offset in Bytes: 1048576
   ----------  ---  -----------  -----  ----------  -------  ---------  --------
 * Volume 4     C   windows ssd  NTFS   Partition    238 GB  Healthy    System
 
+----------------------↑ End ↑----------------------
+
+----------------------↓ Start ↓----------------------
+# OPTIONAL
+
+# jika ada lebih "Active: Yes" dan bukan dari parition windows
+select partition 2  (Pilih partisi non-Windows yang Active)
+inactive           (Matikan status Active)
+# try again check detail partition
 ----------------------↑ End ↑----------------------
 
 # last check (REQUIRED)
