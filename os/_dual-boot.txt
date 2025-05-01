@@ -13,14 +13,48 @@ GRUB_DEFAULT=2 # boot priority to windows
 GRUB_TIMEOUT=10
 
 =============================================
-# remove dual boot, just windows!
+# (MBR) remove dual boot, just windows!
 
 # mbr (bios)
-# delete partition on disk management
+# delete partition linux on disk management # "REQUIRED"
 # open cmd (admin)
 bootsect /nt60 C: /mbr  # bootsect /nt60 <drive name> /mbr
 
+# check (REQUIRED)
+diskpart
+list disk
+select disk X # change 'X' with disk boot
+list partition
+select partition X # change 'X' with partition windows
+detail partition
+
+# Example from "detail partition"
+----------------------↓ Start ↓----------------------
+
+DISKPART> detail partition
+
+Partition 1
+Type  : 07
+Hidden: No
+Active: Yes
+Offset in Bytes: 1048576
+
+  Volume ###  Ltr  Label        Fs     Type        Size     Status     Info
+  ----------  ---  -----------  -----  ----------  -------  ---------  --------
+* Volume 4     C   windows ssd  NTFS   Partition    238 GB  Healthy    System
+
+----------------------↑ End ↑----------------------
+
+# last check (REQUIRED)
+dir C:\bootmgr
+dir C:\Windows\System32\winload.exe
+bcdedit /enum # Pastikan hanya ada entri Windows Boot Manager. 
+
+=============================================
+# (GPT) remove dual boot, just windows!
+
 # gpt (UEFI)
+# delete partition linux on disk management # "REQUIRED"
 # open cmd (admin)
 diskpart
 list disk
@@ -33,8 +67,15 @@ Z:
 dir
 cd EFI
 ls
-rmdir /S ubuntu # change ubuntu with os that you want to delete
+rmdir /S ubuntu # change 'ubuntu' with os that you want to delete
 # type "y" if confirm delete
 remove letter=Z
+
+# last action
+bcdedit /enum firmware
+bcdedit /delete {identifier} # ganti "{identifier}" dan cari entri "Arch Linux" atau "GRUB", lalu hapus
+
+# last check (REQUIRED)
+bcdedit /enum # Pastikan hanya ada entri Windows Boot Manager.
 
 =============================================
