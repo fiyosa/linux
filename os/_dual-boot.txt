@@ -15,6 +15,9 @@ GRUB_TIMEOUT=10
 =============================================
 # (MBR) remove dual boot, just windows!
 
+1) delete grub
+2) delete partition
+
 # mbr (bios)
 # delete partition linux on disk management # "REQUIRED"
 # open cmd (admin)
@@ -64,6 +67,9 @@ bcdedit /v # Pastikan hanya ada entri Windows Boot Manager.
 
 =============================================
 # (GPT) remove dual boot, just windows!
+
+1) delete grub
+2) delete partition
 
 # gpt (UEFI)
 # delete partition linux on disk management # "REQUIRED"
