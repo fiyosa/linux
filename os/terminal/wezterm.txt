@@ -21,12 +21,25 @@ return {
 # open git bash
 vim ~/.bashrc
 -----------------Add-----------------
-_git_branch() {
+git_branch() {
     if ! command -v git &>/dev/null || ! git rev-parse --is-inside-work-tree &>/dev/null; then
         return
     fi
+    
     local branch=$(git branch --show-current 2>/dev/null)
-    [ -n "$branch" ] && echo "-(\[\e[0;34m\]$branch\[\e[0;32m\])"
+    local status=""
+    
+    # Check for merge conflicts first (highest priority)
+    if [ -f "$(git rev-parse --show-toplevel)/.git/MERGE_HEAD" ]; then
+        if git diff --name-only --diff-filter=U | grep -q .; then
+            status="|MERGE"
+        fi
+    # Check for uncommitted changes
+    elif ! git diff --quiet 2>/dev/null || ! git diff --cached --quiet 2>/dev/null; then
+        status="|*"
+    fi
+    
+    [ -n "$branch" ] && echo "-(\[\e[0;34m\]$branch$status\[\e[0;32m\])"
 }
 _get_ip() {
   local ip
