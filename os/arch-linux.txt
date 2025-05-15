@@ -131,6 +131,17 @@ sudo pacman -S tmux fastfetch ranger git
 
 =============================================
 
+# install yay
+sudo pacman -S --needed base-devel git
+git clone https://aur.archlinux.org/yay.git
+cd yay
+sudo chown -R $USER:$USER ./
+chmod -R 755 ./
+makepkg -si
+yay --version
+
+=============================================
+
 # install crontab
 
 sudo pacman -Syu cronie

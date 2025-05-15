@@ -57,8 +57,9 @@ screenfetch
 hostname -I
 
 # share folder vmware
+sudo apt install open-vm-tools open-vm-tools-desktop
 vmware-hgfsclient # check name sharing folder 
-sudo nano /etc/fstab
+sudo vim /etc/fstab
 vmhgfs-fuse    /mnt/hgfs    fuse    defaults,allow_other    0    0
 {exit}
 sudo mkdir /mnt/hgfs
