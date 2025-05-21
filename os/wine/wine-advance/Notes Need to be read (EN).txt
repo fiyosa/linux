@@ -1,0 +1,35 @@
+==================================================================
+README
+==================================================================
+This bash script is just to make it easier for you to install
+Wine Configuration via Winetricks Terminal, so you don't have to bother 
+installing manually, all errors are borne by the installer. The tutorial 
+only provides instructions. 
+==================================================================
+THINGS TO ENSURE ...connected to the internet during the winetricks installation process
+==================================================================
+Tutorial Using the Winetricks_conf Bash Script (Make sure each session 
+is finished first before running the installation session file others)
+==================================================================
+- Open a terminal in the Winetricks_Conf directory
+- Enter the command (according to the file name in *.sh format)
+$ chmod +x rgame.sh winetricks_list_1.sh winetricks_list_2.sh winetricks_list_3.sh winetricks_list_4_OpenGL.sh winetricks_list_4_VulkanSupport.sh
+- Run in "user" mode (non root)
+$ ./winetricks_list_1.sh
+$ ./winetricks_list_2.sh
+$ ./winetricks_list_3.sh
+==================================================================
+GPU with OpenGL Only (Vulkan not supported)
+==================================================================
+$ winetricks_list_4_OpenGL.sh
+==================================================================
+GPU with Vulkan Support (Vulkan Supported & Driver Installed in OS)
+==================================================================
+$ winetricks_list_4_VulkanSupport.sh
+==================================================================
+---
+How to clear Wine Cache
+---
+- sudo rm -rf ~/.wine
+- sudo rm -rf ~/.cache/wine
+- sudo rm -rf ~/.cache/winetricks

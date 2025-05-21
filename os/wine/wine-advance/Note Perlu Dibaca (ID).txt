@@ -1,0 +1,42 @@
+==========================================================
+README
+==========================================================
+Script bash ini hanya untuk mempermudah kalian menginstall
+konfigurasi Wine lewat Winetricks Terminal, jadi kalian
+tidak perlu repot untuk menginstall manual, segala kesalahan
+ditanggung penginstall. Tutorial hanya memberikan arahan saja.
+==========================================================
+HAL YANG PERLU DIPASTIKAN
+==========================================================
+1. Pastikan Driver kalian sudah terinstall dengan benar (sound & gpu)
+2. Saran OpenGL Minimal 3.1 tapi 2.1 juga ada beberapa game/aplikasi masih ada yang bisa
+2. Pastikan sudah menginstall Wine & Winetricks
+3. Pastikan sudah menginstall package pendukung (wget, tar, cabextract, mesa-demos)
+4. Pastikan kalian mengetahui bahwa Driver & Hardware kalian menggunakan OpenGL maupun Vulkan
+5. Pastikan mengikuti video tutorial dengan benar
+6. Pastikan anda terkoneksi internet saat proses install winetricks
+==========================================================
+Tutorial Pakai Script Bash Winetricks_conf (Pastikan setiap sesi selesai terlebih dahulu sebelum menjalankan file sesi install lain)
+==========================================================
+- Buka terminal dalam Directory Winetricks_Conf
+- masukan perintah (sesuai nama file berformat *.sh)
+$ chmod +x rgame.sh winetricks_list_1.sh winetricks_list_2.sh winetricks_list_3.sh winetricks_list_4_OpenGL.sh winetricks_list_4_VulkanSupport.sh
+- jalankan dengan mode "user" atau $
+$ ./winetricks_list_1.sh
+$ ./winetricks_list_2.sh
+$ ./winetricks_list_3.sh
+==========================================================
+GPU dengan OpenGL Only (Tidak di dukung Vulkan)
+==========================================================
+$ winetricks_list_4_OpenGL.sh
+==========================================================
+GPU dengan Vulkan Support (Didukung Vulkan & Sudah install Driver pada OS)
+==========================================================
+$ winetricks_list_4_VulkanSupport.sh
+==========================================================
+---
+How to remove Wine Cache
+---
+- sudo rm -rf ~/.wine
+- sudo rm -rf ~/.cache/wine
+- sudo rm -rf ~/.cache/winetricks

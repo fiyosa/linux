@@ -1,0 +1,26 @@
+# installation
+
+# https://gitlab.winehq.org/wine/wine/-/wikis/Debian-Ubuntu
+
+sudo dpkg --add-architecture i386
+cat /etc/os-release
+sudo mkdir -pm755 /etc/apt/keyrings
+wget -O - https://dl.winehq.org/wine-builds/winehq.key | sudo gpg --dearmor -o /etc/apt/keyrings/winehq-archive.key -
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources
+sudo apt update
+sudo apt install --install-recommends winehq-stable
+winecfg
+
+========================================================
+
+# install GUI Wine
+
+sudo apt install python3-tk python3-pil python3-pil.imagetk
+https://github.com/DidiSlothStanca/WLM-WineLaunchManager/releases/download/wlm/wlm.tar.gz
+tar -xf wlm.tar.gz -C ~/
+cd ~/wlm/
+./WLM.sh
+
+========================================================
+
+https://github.com/DidiSlothStanca/WAI-WinetricksAutoInstall
