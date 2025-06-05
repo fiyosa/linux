@@ -8,7 +8,6 @@
     "ritwickdey.liveserver",
     "bmewburn.vscode-intelephense-client",
     "codeium.codeium",
-    "github.copilot",
-    "github.copilot-chat"
+    "sleistner.vscode-fileutils"
   ]
 }

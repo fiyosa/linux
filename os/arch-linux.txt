@@ -191,7 +191,7 @@ sudo pacman -Sy
 
 # format full disk
 umount /dev/sdaX
-wipefs -af /dev/sda 
+wipefs -af /dev/sdaX 
 
 =============================================
 

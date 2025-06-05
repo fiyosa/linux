@@ -21,7 +21,7 @@ return {
 # open git bash
 vim ~/.bashrc
 -----------------Add-----------------
-git_branch() {
+_git_branch() {
     if ! command -v git &>/dev/null || ! git rev-parse --is-inside-work-tree &>/dev/null; then
         return
     fi

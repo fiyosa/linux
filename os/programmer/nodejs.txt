@@ -1,0 +1,19 @@
+curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+source ~/.profile 
+
+===============================================================
+
+# list version nodejs
+https://nodejs.org/dist/
+
+# show version nvm
+nvm -v  
+
+# install version nodejs
+nvm install 22.16.0
+
+# show list node version
+nvm list
+
+# switch version nodejs
+nvm use 22.16.0

@@ -1,0 +1,27 @@
+# autologin
+
+sudo mkdir -p /etc/systemd/system/getty@tty1.service.d
+sudo vim /etc/systemd/system/getty@tty1.service.d/override.conf
+
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin fys --noclear %I $TERM
+
+sudo systemctl daemon-reload
+sudo systemctl restart getty@tty1.service
+
+===========================================================
+# Delete snapd
+
+sudo systemctl stop snapd
+sudo systemctl disable snapd
+
+sudo apt remove --purge snapd
+sudo apt autoremove
+
+sudo rm -rf ~/snap
+sudo rm -rf /snap
+sudo rm -rf /var/snap
+sudo rm -rf /var/lib/snapd
+
+===========================================================
