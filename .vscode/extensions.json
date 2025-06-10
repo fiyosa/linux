@@ -8,6 +8,7 @@
     "ritwickdey.liveserver",
     "bmewburn.vscode-intelephense-client",
     "codeium.codeium",
-    "sleistner.vscode-fileutils"
+    "sleistner.vscode-fileutils",
+    "rangav.vscode-thunder-client"
   ]
 }
