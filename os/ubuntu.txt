@@ -11,17 +11,18 @@ sudo systemctl daemon-reload
 sudo systemctl restart getty@tty1.service
 
 ===========================================================
+# Change repo if slow download package ubuntu
+
+sudo sed -i 's|http://id.archive.ubuntu.com/ubuntu|http://kartolo.sby.datautama.net.id/ubuntu|g' /etc/apt/sources.list
+
+===========================================================
 # Delete snapd
 
 sudo systemctl stop snapd
 sudo systemctl disable snapd
 
-sudo apt remove --purge snapd
-sudo apt autoremove
+sudo apt remove --purge snapd --auto-remove
 
-sudo rm -rf ~/snap
-sudo rm -rf /snap
-sudo rm -rf /var/snap
-sudo rm -rf /var/lib/snapd
+sudo rm -rf ~/snap /snap /var/snap /var/lib/snapd
 
 ===========================================================

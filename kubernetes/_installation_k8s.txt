@@ -1,0 +1,31 @@
+https://k3s.io/
+
+curl -sfL https://get.k3s.io | sh -
+sudo k3s kubectl get node
+
+=============================================================
+# run k3s without 'sudo k3s'
+
+sudo groupadd k3s
+sudo usermod -aG k3s $USER
+
+sudo chown -R root:k3s /var/lib/rancher/k3s/
+sudo chmod -R 750 /var/lib/rancher/k3s/
+
+sudo chmod 644 /etc/rancher/k3s/k3s.yaml
+sudo chown root:k3s /etc/rancher/k3s/k3s.yaml
+
+mkdir -p ~/.kube
+sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+sudo chown $USER ~/.kube/config
+
+kubectl get all -A
+
+=============================================================
+# install dashboard ui
+
+sudo k3s kubectl apply -n portainer -f https://raw.githubusercontent.com/portainer/k8s/master/deploy/manifests/portainer/portainer.yaml
+http://localhost:30777
+
+# if auth timeout
+sudo k3s kubectl rollout restart deployment portainer -n portainer

@@ -1,0 +1,28 @@
+# show ip kubernetes
+minikube ip
+
+# show url for service with type NodePort
+minikube service kubernetes-dashboard -n kubernetes-dashboard --url
+
+# open ssh in kubernetes
+minikube ssh
+docker ps
+
+# get all resources
+kubectl get all -A
+kubectl get all -n kubernetes-dashboard
+
+# get services
+kubectl get svc -A
+
+# get namespaces
+kubectl get ns -A
+
+# get pods
+kubectl get pod -A
+
+# edit config service
+KUBE_EDITOR="nano" kubectl -n kubernetes-dashboard edit service/kubernetes-dashboard
+
+# restart deployment or pod
+sudo k3s kubectl rollout restart deployment portainer -n portainer

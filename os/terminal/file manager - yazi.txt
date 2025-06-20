@@ -12,14 +12,33 @@ rm -rf yazi-temp yazi.zip
 # To delete Yazi, eliminate the associated file:
 sudo rm -rf /usr/local/bin/{ya,yazi}
 
+=============================================================
+
 # https://yazi-rs.github.io/docs/configuration/overview/
 
-# quit ~/.bashrc
+# 'q' quit directory active
+# 'shift+q' quit last directory
+
+vim ~/.bashrc
+
 function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	yazi "$@" --cwd-file="$tmp"
-	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		builtin cd -- "$cwd"
-	fi
-	rm -f -- "$tmp"
+    local tmp cwd    
+    tmp=$(mktemp -t "yazi-cwd.XXXXXX") || return 1
+    yazi "$@" --cwd-file="$tmp"    
+    if cwd=$(cat -- "$tmp" 2>/dev/null) && [[ -n "$cwd" && "$cwd" != "$PWD" ]]; then
+        cd -- "$cwd" || echo "Failed to change directory" >&2
+    fi    
+    rm -f -- "$tmp"
 }
+
+source ~/.bashrc
+
+=============================================================
+
+mkdir -p ~/.config/yazi
+vim ~/.config/yazi/yazi.toml
+
+[manager]
+show_hidden = true
+
+=============================================================
