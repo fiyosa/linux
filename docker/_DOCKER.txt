@@ -7,9 +7,20 @@ sudo apt install docker.io docker-compose -y
 sudo usermod -aG docker $USER
 	
 sudo docker run -d \
-	--name portainer \
-	--restart=always \
-	-p 9000:9000 \
-	-v /var/run/docker.sock:/var/run/docker.sock \
-	-v ~/docker/portainer:/data \
-	portainer/portainer-ce:alpine
+--name portainer \
+--restart=always \
+-p 9000:9000 \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v ~/docker/portainer:/data \
+portainer/portainer-ce:alpine
+
+==========================================================
+
+docker run -d \
+--name openlitespeed \
+--restart=always \
+-p 7080:7080 \
+litespeedtech/openlitespeed:latest
+
+user: admin
+pass: 123456
