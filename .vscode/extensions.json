@@ -10,6 +10,7 @@
     "codeium.codeium",
     "sleistner.vscode-fileutils",
     "saoudrizwan.claude-dev",
-    "vasubasraj.flashpost"
+    "vasubasraj.flashpost",
+    "echoapi.echoapi-for-vscode"
   ]
 }
