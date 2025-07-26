@@ -1,0 +1,103 @@
+https://garagehq.deuxfleurs.fr/documentation/quick-start/
+
+# ==========================================================
+
+sudo mkdir -p ~/docker/garage && sudo tee ~/docker/garage/garage.toml >/dev/null <<EOF
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+db_engine = "lmdb"
+
+replication_factor = 1
+
+rpc_bind_addr = "0.0.0.0:3901"
+rpc_public_addr = "0.0.0.0:3901"
+rpc_secret = "$(openssl rand -hex 32)"
+
+[s3_api]
+s3_region = "local"
+api_bind_addr = "0.0.0.0:3900"
+root_domain = ""
+
+[s3_web]
+bind_addr = "0.0.0.0:3902"
+root_domain = ""
+index = "index.html"
+
+[k2v_api]
+api_bind_addr = "0.0.0.0:3904"
+
+[admin]
+api_bind_addr = "0.0.0.0:3903"
+admin_token = "$(openssl rand -base64 32)"
+metrics_token = "$(openssl rand -base64 32)"
+EOF
+
+# ==========================================================
+
+docker run -d \
+  --name garage \
+  --restart unless-stopped \
+  -p 3900:3900 -p 3901:3901 -p 3902:3902 -p 3903:3903 \
+  -v ~/docker/garage/garage.toml:/etc/garage.toml \
+  -v ~/docker/garage/meta:/var/lib/garage/meta \
+  -v ~/docker/garage/data:/var/lib/garage/data \
+  dxflrs/garage:v1.2.0
+
+# ==========================================================
+# GUI garage
+# bcrypt-generator.com
+# use "\" before "$"
+# admin:admin
+
+docker run -d \
+	--name garage-ui \
+	--restart unless-stopped \
+	-p 3909:3909 \
+	-v ~/docker/garage/garage.toml:/etc/garage.toml:ro \
+	-e API_BASE_URL="http://192.168.133.147:3903" \
+	-e S3_ENDPOINT_URL="http://192.168.133.147:3900" \
+	-e AUTH_USER_PASS="admin:\$2a\$10\$xHYwOxuQXGj54IJnQT6uYOQc2EATDw7V2CGFirHmonNDwnsg8dRca" \
+	khairul169/garage-webui:latest
+
+# ==========================================================
+
+vim ~/.bashrc
+
+alias garage="docker exec -ti garage /garage"
+
+source ~/.bashrc
+
+# ==========================================================
+  
+garage status
+
+garage layout -h # help
+
+garage layout assign -z local -c 1G <check id on status> # create storage
+garage layout assign -z local -c 1G 106d5f70b86b4e1c # create storage
+
+garage layout apply --version 1
+
+garage layout remove <node_id> # delete storage
+
+garage bucket create local-storage
+garage bucket info local-storage
+
+garage key create local-key
+
+garage bucket allow \
+  --read \
+  --write \
+  --owner \
+  local-storage \
+  --key local-key
+
+# ==========================================================
+# .env laravel
+
+AWS_ACCESS_KEY_ID=GKde42781c179ce9a3fdf58b39
+AWS_SECRET_ACCESS_KEY=ba6b0de7744848f7381a644fd04e4f5c37bd20f842e93093b51cbd90d43c5ce8
+AWS_DEFAULT_REGION=local
+AWS_BUCKET=local-storage
+AWS_ENDPOINT=http://192.168.133.147:3900
+AWS_USE_PATH_STYLE_ENDPOINT=true	

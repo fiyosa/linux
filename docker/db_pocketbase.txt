@@ -1,0 +1,14 @@
+docker run -d \
+  --name=pocketbase \
+  --restart unless-stopped \
+  -p 8090:8090 \
+  -v ~/docker/pocketbase/data:/pb_data \
+  -v ~/docker/pocketbase/public:/pb_public \
+  -v ~/docker/pocketbase/hooks:/pb_hooks \
+  ghcr.io/muchobien/pocketbase:latest
+  
+check logs for login
+  
+http://127.0.0.1:8090 - if pb_public directory exists, serves the static content from it (html, css, images, etc.)
+http://127.0.0.1:8090/_/ - superusers dashboard
+http://127.0.0.1:8090/api/ - REST-ish API

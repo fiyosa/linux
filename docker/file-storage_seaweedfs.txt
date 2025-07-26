@@ -1,0 +1,29 @@
+docker run -d \
+  --name seaweedfs \
+  --restart=unless-stopped \
+  -p 9333:9333 \
+  -v ~/docker/seaweedfs/data:/data \
+  chrislusf/seaweedfs \
+  server -dir /data -filer
+
+docker run -d \
+  --name seaweedfs-auth \
+  --restart=unless-stopped \
+  --link seaweedfs:seaweedfs \
+  -p 8888:80 \
+  -e FORWARD_HOST=seaweedfs \
+  -e FORWARD_PORT=8888 \
+  -e HTPASSWD='admin:$apr1$6rnqwy0i$S1/FgC6NEQ2Jys7pSEWta0' \
+  beevelop/nginx-basic-auth
+
+# use MD5
+https://aspirine.org/htpasswd_en.html
+https://hostingcanada.org/htpasswd-generator/ 
+user: admin
+pass: admin
+
+# logout
+http://logout:logout@192.168.133.147:8888	# just add random string on 'logout'
+
+time curl -X GET http://localhost:9333
+time curl -u admin:admin http://localhost:8888

@@ -1,0 +1,40 @@
+https://www.bugsink.com/docs/settings/
+
+docker run -d \
+	--name postgresql \
+	--restart=unless-stopped \
+	-p 5432:5432 \
+	-v ~/docker/postgresql:/var/lib/postgresql/data \
+	-e POSTGRES_USER=postgres \
+	-e POSTGRES_PASSWORD=postgres \
+	postgres:17-alpine
+
+docker run -d \
+  --name sentry \
+  --restart=unless-stopped \
+  -p 8001:8000 \
+  -e BASE_URL="http://192.168.133.147:8001" \
+  -e SITE_TITLE="Sentry" \
+  -e DATABASE_URL="postgresql://postgres:postgres@192.168.133.147:5432/bugsink" \
+  -e SECRET_KEY=RLcOmKkbIQMnBVraZtsN2CGohO1lFzm2p1leHHvXpdoPt6yDi5 \
+  -e CREATE_SUPERUSER=admin@gmail.com:admin \
+  -e TIME_ZONE="Asia/Jakarta" \
+  bugsink/bugsink
+
+docker run -d \
+  --name sentry \
+  --restart=unless-stopped \
+  -p 8001:8000 \
+  -e BASE_URL="http://192.168.133.147:8001" \
+  -e SITE_TITLE="Sentry" \
+  -e DATABASE_URL="postgresql://postgres:postgres@192.168.133.147:5432/bugsink" \
+  -e SECRET_KEY=RLcOmKkbIQMnBVraZtsN2CGohO1lFzm2p1leHHvXpdoPt6yDi5 \
+  -e CREATE_SUPERUSER=admin@gmail.com:admin \
+  -e TIME_ZONE="Asia/Jakarta" \
+  -e EMAIL_USE_TLS="false" \
+  -e EMAIL_HOST="192.168.133.147" \
+  -e EMAIL_PORT="1025" \
+  -e EMAIL_HOST_USER="" \
+  -e EMAIL_HOST_PASSWORD="" \
+  -e DEFAULT_FROM_EMAIL=""no-reply<helpdesk@helpdesk.com>"" \
+  bugsink/bugsink

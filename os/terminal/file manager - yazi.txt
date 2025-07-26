@@ -24,7 +24,7 @@ vim ~/.bashrc
 function y() {
     local tmp cwd    
     tmp=$(mktemp -t "yazi-cwd.XXXXXX") || return 1
-    yazi "$@" --cwd-file="$tmp"    
+    yazi "$@" --cwd-file="$tmp"
     if cwd=$(cat -- "$tmp" 2>/dev/null) && [[ -n "$cwd" && "$cwd" != "$PWD" ]]; then
         cd -- "$cwd" || echo "Failed to change directory" >&2
     fi    

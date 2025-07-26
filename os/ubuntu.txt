@@ -35,3 +35,12 @@ sudo apt remove --purge snapd --auto-remove
 sudo rm -rf ~/snap /snap /var/snap /var/lib/snapd
 
 ===========================================================
+# shared_folder vmware
+
+vmware-hgfsclient # check if not found
+-> sudo apt install -y open-vm-tools
+sudo mkdir -p /mnt/hgfs
+sudo vmhgfs-fuse .host:/laravel /mnt/hgfs -o allow_other -o uid=$(id -u) -o gid=$(id -g)
+echo ".host:/laravel  /mnt/hgfs  fuse.vmhgfs-fuse  defaults,allow_other,uid=$(id -u),gid=$(id -g)  0  0" | sudo tee -a /etc/fstab
+
+===========================================================

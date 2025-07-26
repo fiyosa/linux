@@ -2,9 +2,11 @@ docker run -u0 -d \
 	--name jenkins \
 	--restart=unless-stopped \
 	-p 9090:8080 \
-	-v /var/run/docker.sock:/var/run/docker.sock \
 	-v ~/docker/jenkins:/var/jenkins_home \
-	jenkins/jenkins:lts
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	-v /usr/bin/docker:/usr/bin/docker \
+	jenkins/jenkins:2.517-alpine-jdk21
+
 docker exec -it -u0 jenkins bash
 apt-get update 
 curl https://get.docker.com/ > dockerinstall && chmod 777 dockerinstall && ./dockerinstall

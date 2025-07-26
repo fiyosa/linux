@@ -16,6 +16,58 @@ portainer/portainer-ce:alpine
 
 ==========================================================
 
+# build project without cache (less memory) & debug
+docker compose build --no-cache --progress plain
+
+# build project & debug
+docker compose build --progress plain
+
+# build then start project
+docker compose up -d --build
+
+# start project
+docker compose up -d
+
+# stop 
+docker compose stop
+
+# stop & delete 
+docker compose down
+
+# stop & delete with volume
+docker compose down -v
+
+# stop & delete all
+docker compose down -v --rmi all
+
+# delete image with tag <none>
+docker image prune -f
+
+# show usage disk Docker
+docker system df
+
+# show detail cache
+docker builder du
+
+# delete all cache docker
+docker builder prune --all
+
+------------------------------------------------------------------
+
+docker compose down && docker compose build --no-cache --progress plain && docker compose up -d
+
+docker compose down && docker compose build --progress plain && docker compose up -d
+
+docker compose down && docker compose up -d --build
+
+docker compose build --no-cache --progress plain && docker compose up -d
+
+docker compose down -v --rmi all && docker compose build --no-cache --progress plain && docker compose up -d
+
+curl -I http://localhost:8080
+
+==========================================================
+
 docker run -d \
 --name openlitespeed \
 --restart=always \

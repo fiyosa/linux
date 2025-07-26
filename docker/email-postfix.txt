@@ -1,0 +1,41 @@
+docker run -d \
+  --name mailhog \
+  -p 1025:1025 -p 8025:8025 \
+  mailhog/mailhog:v1.0.0
+
+docker run -d \
+  --name smtp -p 2500:25 \
+  --restart=unless-stopped \
+  -e SMTP_SERVER=192.168.133.147 \
+  -e SMTP_PORT=1025 \
+  -e SMTP_USERNAME= \
+  -e SMTP_PASSWORD= \
+  -e SERVER_HOSTNAME=localhost \
+  -e SMTP_NETWORKS="172.22.0.0/16" \
+  juanluisbaptiste/postfix
+
+# =========================================
+# webhook url from telegram (bot father)
+
+https://api.telegram.org/bot<your-token>/getUpdates
+
+result[0].message.chat.id (chat_id)
+
+https://api.telegram.org/bot<your-token>/sendMessage?chat_id=<chat-id>&text=There%20is%20an%20error!
+
+# =========================================
+
+telnet 192.168.133.147 2500
+
+# -----------------------------------------
+  
+MAIL FROM: <you@example.com>
+RCPT TO: <recipient@example.com>
+DATA
+From: you@example.com
+To: recipient@example.com
+Subject: Test Email
+
+This is a test message.
+.
+QUIT

@@ -1,0 +1,6 @@
+https://github.com/aristocratos/btop/releases
+
+curl -LO https://github.com/aristocratos/btop/releases/download/v1.4.4/btop-x86_64-linux-musl.tbz
+tar xf btop-*.tbz 
+sudo mv btop-*/bin/btop /usr/local/bin/
+sudo rm -rf btop btop-*.tbz 
