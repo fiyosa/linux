@@ -1,0 +1,15 @@
+docker run -d \
+  --name seq \
+  --restart unless-stopped \
+  -e ACCEPT_EULA=Y \
+  -e SEQ_PASSWORD=admin \
+  -p 5341:80 \
+  datalust/seq
+
+# ===========================================================
+
+# laravel
+https://packagist.org/packages/stormcode/seq-laravel-log
+
+# others
+https://datalust.co/docs/getting-logs-into-seq

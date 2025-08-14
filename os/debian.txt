@@ -1,3 +1,18 @@
+# installation
+
+Graphic Installer
+
+# manual partition
+
+
+"scan media" => no
+"dpkg-reconfigure popularity-contest" => no
+
+"install the GRUP boot loader..." => yes
+"device for boot loader installation" => /dev/sda
+
+# ==============================================================
+
 # shutdown & reboot
 
 systemctl poweroff
@@ -12,6 +27,7 @@ usermod -aG sudo fys
 systemctl reboot
 sudo whoami
 
+# optional
 which sudo
 echo $PATH
 nano ~/.bashrc
@@ -33,11 +49,11 @@ sudo systemctl restart getty@tty1
 # ==============================================================
 
 # implement package install suggestion on Debian
-apt install -y command-not-found ranger htop screenfetch  tmux
-apt update -y
-update-command-not-found
-apt update -y
-systemctl reboot
+sudo apt install -y command-not-found htop screenfetch curl wget vim git unzip
+sudo apt update -y
+sudo update-command-not-found
+sudo apt update -y
+sudo reboot
 
 # ==============================================================
 

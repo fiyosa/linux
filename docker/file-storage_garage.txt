@@ -54,8 +54,8 @@ docker run -d \
 	--restart unless-stopped \
 	-p 3909:3909 \
 	-v ~/docker/garage/garage.toml:/etc/garage.toml:ro \
-	-e API_BASE_URL="http://192.168.133.147:3903" \
-	-e S3_ENDPOINT_URL="http://192.168.133.147:3900" \
+	-e API_BASE_URL="http://192.168.133.153:3903" \
+	-e S3_ENDPOINT_URL="http://192.168.133.153:3900" \
 	-e AUTH_USER_PASS="admin:\$2a\$10\$xHYwOxuQXGj54IJnQT6uYOQc2EATDw7V2CGFirHmonNDwnsg8dRca" \
 	khairul169/garage-webui:latest
 

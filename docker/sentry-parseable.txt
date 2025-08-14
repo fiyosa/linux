@@ -1,0 +1,13 @@
+https://www.parseable.com/docs/quickstart/docker
+
+docker run -d \
+  --name parseable \
+  --restart unless-stopped \
+  -p 8000:8000 \
+  -v ~/docker/parseable/data:/parseable/data \
+  -v ~/docker/parseable/staging:/parseable/staging \
+  -e TZ=Asia/Jakarta \
+  -e P_FS_DIR=/parseable/data \
+  -e P_STAGING_DIR=/parseable/staging \
+  parseable/parseable:latest \
+  parseable local-store

@@ -1,5 +1,13 @@
+https://github.com/nvm-sh/nvm#installing-and-updating
+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+$ chmod +x ~/.nvm/nvm.sh
+$ source ~/.bashrc
+
+---------------------------------------------------------------
+
 curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-source ~/.profile 
+source ~/.bashrc 
 
 ===============================================================
 

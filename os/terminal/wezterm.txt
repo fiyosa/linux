@@ -57,7 +57,7 @@ _update_branch() {
 }
 PROMPT_COMMAND='_update_branch'
 -----------------End-----------------
-source .bashrc
+source ~/.bashrc
 # open file C:\Users\{user}\.bash_profile
 -----------------Add-----------------
 if [ -f ~/.bashrc ]; then
