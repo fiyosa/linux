@@ -1,0 +1,19 @@
+docker run -d \
+	--name gitlab \
+	--restart=unless-stopped \
+	--hostname localhost \
+	--publish 4443:443 --publish 8080:80 --publish 2222:22 \
+	--volume ~/docker/gitlab/config:/etc/gitlab \
+	--volume ~/docker/gitlab/logs:/var/log/gitlab \
+	--volume ~/docker/gitlab/data:/var/opt/gitlab \
+	--shm-size 256m \
+	gitlab/gitlab-ce:latest
+	
+# for set new account, example: root/notebook
+docker exec -it gitlab gitlab-rake "gitlab:password:reset"
+
+# if you forgot account with username "root"
+sudo docker exec -it gitlab gitlab-rake "gitlab:password:reset[root]"
+
+
+

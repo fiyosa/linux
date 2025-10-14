@@ -4,7 +4,6 @@ Graphic Installer
 
 # manual partition
 
-
 "scan media" => no
 "dpkg-reconfigure popularity-contest" => no
 
@@ -35,19 +34,6 @@ PATH=$PATH:usr/bin:
 
 # ==============================================================
 
-# autologin
-sudo mkdir -p /etc/systemd/system/getty@tty1.service.d
-sudo nano /etc/systemd/system/getty@tty1.service.d/override.conf
-
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin fys --noclear %I $TERM
-
-sudo systemctl daemon-reload
-sudo systemctl restart getty@tty1
-
-# ==============================================================
-
 # implement package install suggestion on Debian
 sudo apt install -y command-not-found htop screenfetch curl wget vim git unzip
 sudo apt update -y
@@ -55,9 +41,26 @@ sudo update-command-not-found
 sudo apt update -y
 sudo reboot
 
+# install btop
+mkdir downloads
+curl -LO https://github.com/aristocratos/btop/releases/download/v1.4.4/btop-x86_64-linux-musl.tbz
+tar xf btop-*.tbz 
+sudo mv btop/bin/btop /usr/local/bin/
+sudo rm -rf btop btop-*.tbz
+btop
+
+# yazi
+# teminal
+
 # ==============================================================
 
-# edit terminal
-nano ~/.bashrc
-PS1="\[\e[1;32m\]┌──(\u@\h)-[\[\e[1;36m\]\w\[\e[1;32m\]]\n└─\[\e[m\]\$ "
-source ~/.bashrc
+# autologin
+sudo mkdir -p /etc/systemd/system/getty@tty1.service.d
+sudo vim /etc/systemd/system/getty@tty1.service.d/override.conf
+
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin fys --noclear %I $TERM
+
+sudo systemctl daemon-reload
+sudo systemctl restart getty@tty1

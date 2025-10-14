@@ -1,0 +1,17 @@
+setup-alpine
+keyboard layout => us
+select variant => us
+{network => just enter}
+hostname & password
+timezone => Asia
+timezone of 'Asia' => Jakarta
+mirror repo => e -> edit
+
+mirror repo => 
+http://foobar.turbo.net.id/alpine/v3.22/main
+http://foobar.turbo.net.id/alpine/v3.22/community
+
+User -> Setup a user? => fys
+which disk => sda
+how would you like to use id => sys
+erase the abouce disk and continue => y

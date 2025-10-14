@@ -1,10 +1,71 @@
-sudo vim /etc/containers/registries.conf
-unqualified-search-registries = ["docker.io"]
+sudo apt install -y podman
 
-podman run -d \
-	--name portainer \
+sudo podman network create --driver bridge podman
+
+sudo podman run -d \
+	--name portainer-admin \
 	--restart=always \
 	--privileged \
-	-p 8000:8000 -p 9000:9000 \
-	-v ~/podman/portainer:/data \
+	-p 9000:9000 \
+	-v /run/podman/podman.sock:/var/run/docker.sock \
+	-v ~/docker/podman/portainer:/data \
 	docker.io/portainer/portainer-ce:alpine
+	
+==================================================================
+# install podman-compose
+
+sudo apt install -y python3-pip
+sudo pip3 install podman-compose
+
+# optional
+vim ~/.bashrc
+export PATH=$PATH:$HOME/.local/bin
+source ~/.bashrc
+
+==================================================================
+
+# Enable dan start podman.socket (yang memicu podman.service)
+sudo systemctl enable --now podman.socket
+
+# Cek status
+sudo systemctl status podman.socket
+
+systemctl --user enable --now podman.socket
+
+# run podman without sudo (NOT RECOMMENDED)
+sudo loginctl enable-linger $USER
+
+# diable linger for user
+sudo loginctl disable-linger $USER
+
+# check status
+systemctl --user status podman.socket
+
+# check if linger active
+loginctl show-user $USER | grep Linger
+
+==================================================================
+
+mkdir -p ~/docker/podman/portainer-user
+podman run -d \
+	--name portainer-user \
+	--security-opt label=disable \
+	-p 9001:9000 \
+	-v /run/user/$(id -u)/podman/podman.sock:/var/run/docker.sock:Z \
+	-v ~/docker/podman/portainer-user:/data:Z \
+	docker.io/portainer/portainer-ce:alpine
+
+podman run \
+  --detach \
+  -p 9444:9443 \
+  --name portainer \
+  --security-opt label=disable \
+  -v /run/user/$(id -u)/podman/podman.sock:/var/run/docker.sock:Z \
+  -v ~/docker/podman/portainer-user:/data:Z \
+  docker.io/portainer/portainer-ce
+
+podman container stop
+podman container rm
+
+sudo rm -rf ~/docker/podman/portainer-user
+mkdir -p ~/docker/podman/portainer-user
