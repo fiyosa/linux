@@ -1,0 +1,86 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "theme": {
+    "mode": "system",
+    "light": "One Light",
+    "dark": "Cobalt2"
+  },
+  "terminal": {
+    "dock": "bottom",
+    "shell": {
+      "program": "C:/Program Files/Git/bin/bash.exe"
+    }
+  },
+  "auto_update": false,
+  "base_keymap": "VSCode",
+  "icon_theme": "VSCode Great Icons Theme",
+  "collaboration_panel": { "dock": "right" },
+  "outline_panel": { "dock": "right" },
+  "telemetry": { "diagnostics": false, "metrics": false },
+  "minimap": { "show": "never" },
+  "ui_font_size": 16,
+  "buffer_font_size": 12,
+
+  "project_panel": { "dock": "right" },
+  "indent_guides": { "enabled": true },
+  "tab_size": 2,
+
+  "format_on_save": "on",
+
+  "languages": {
+    "Go": {
+      "tab_size": 4
+    },
+    "PHP": {
+      "tab_size": 4,
+      "format_on_save": "on",
+      "language_servers": ["intelephense", "!phpactor"]
+    },
+
+    // Use eslint for all of the formatting as it will use the eslint.config.js file, which includes prettier.
+    "Vue.js": {
+      "language_servers": ["vue-language-server", "vtsls", "..."],
+      "prettier": { "allowed": true }
+      // "formatter": [{ "code_action": "source.fixAll.eslint" }]
+    },
+    "TypeScript": {
+      "language_servers": ["vtsls", "!typescript-language-server", "..."],
+      "prettier": { "allowed": true }
+      // "formatter": [{ "code_action": "source.fixAll.eslint" }]
+    },
+    "TSX": {
+      "language_servers": ["vtsls", "!typescript-language-server", "..."],
+      "prettier": { "allowed": true }
+      // "formatter": [{ "code_action": "source.fixAll.eslint" }]
+    },
+    "JavaScript": {
+      "language_servers": ["vtsls", "!typescript-language-server", "..."],
+      "prettier": { "allowed": true }
+      // "formatter": [{ "code_action": "source.fixAll.eslint" }]
+    }
+  },
+
+  "file_types": {
+    "PHP": ["*.php"],
+    "Blade": ["*.blade.php"]
+  },
+
+  "file_scan_exclusions": [
+    "**/.git",
+    "**/.svn",
+    "**/.hg",
+    "**/.jj",
+    "**/CVS",
+    "**/.DS_Store",
+    "**/Thumbs.db",
+    "**/.classpath",
+    "**/.settings"
+  ]
+}

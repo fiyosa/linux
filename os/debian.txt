@@ -64,3 +64,7 @@ ExecStart=-/sbin/agetty --autologin fys --noclear %I $TERM
 
 sudo systemctl daemon-reload
 sudo systemctl restart getty@tty1
+
+# ==============================================================
+
+sudo sed -i 's|https://mr.heru.id|http://kartolo.sby.datautama.net.id/|g' /etc/apt/sources.list

@@ -9,3 +9,18 @@ sudo tar -C /usr/local -xzf go1.24.3.linux-amd64.tar.gz
 export PATH=$PATH:/usr/local/go/bin
 
 go version
+
+
+# =============================================================
+
+on windows 
+install air: https://github.com/air-verse/air
+
+go install github.com/air-verse/air@latest
+
+- open environment -> User variables for ... -> Path -> add "%USERPROFILE%\go\bin" -> ok
+
+air -v # check version
+air init # init air on root project 
+air # run air
+
