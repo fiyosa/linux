@@ -13,7 +13,11 @@ go version
 
 # =============================================================
 
-on windows 
+on windows
+
+- (optional) check -> open environment -> System variables -> Path -> add "C:\Program Files\Go\bin"
+go version
+
 install air: https://github.com/air-verse/air
 
 go install github.com/air-verse/air@latest
