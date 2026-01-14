@@ -1,17 +1,123 @@
+localhost login => root
+
 setup-alpine
 keyboard layout => us
 select variant => us
+Enter system hostname => fys
 {network => just enter}
 hostname & password
 timezone => Asia
 timezone of 'Asia' => Jakarta
 mirror repo => e -> edit
 
-mirror repo => 
-http://foobar.turbo.net.id/alpine/v3.22/main
-http://foobar.turbo.net.id/alpine/v3.22/community
+mirror repo =>
+http://mirror.jingk.ai/alpine/latest-stable/main		# Singapore
+http://mirror.jingk.ai/alpine/latest-stable/community	# Singapore
 
 User -> Setup a user? => fys
 which disk => sda
 how would you like to use id => sys
 erase the abouce disk and continue => y
+
+# ==================================================
+
+# update list package
+sudo apk update
+
+# install packages
+sudo apk add name-package
+
+# delete package
+sudo apk del --purge name-package 
+
+# clean cache package
+sudo apk cache clean
+
+# ==================================================
+
+# install sudo
+
+apk update
+apk add sudo
+
+adduser fys wheel	# change fys to your user
+
+echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/wheel
+
+# ==================================================
+
+# change shell sh to bash
+
+sudo apk add bash bash-completion
+
+# Edit file passwd
+sudo vim /etc/passwd
+
+# Cari baris yang ada "fys", ubah dari:
+fys:x:1000:1000:User Name:/home/fys:/bin/sh
+root:x:0:0:root:/root:/bin/sh
+
+# Menjadi:
+fys:x:1000:1000:User Name:/home/fys:/bin/bash
+root:x:0:0:root:/root:/bin/bash
+
+# Save dan exit (:wq)
+
+# and then "su -"
+touch ~/.bash_login
+vim ~/.bash_login
+
+# Source .bashrc if it exists
+if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+fi
+# :wq
+
+sudo reboot
+
+echo $SHELL
+
+touch ~/.bashrc
+source ~/.bashrc
+
+# ==================================================
+
+# auto login
+
+sudo apk add agetty
+sudo vim /etc/inittab
+
+# change=> tty1::respawn:/sbin/getty 38400 tty1
+tty1::respawn:/sbin/agetty --autologin fys --noclear 38400 tty1 linux
+# :wq
+
+sudo reboot
+
+# ==================================================
+
+# install package utilities
+
+sudo apk add vim htop curl fastfetch
+
+# ==================================================
+
+# install podman podman-compose
+
+sudo apk add podman iptables podman-compose
+
+# enable the cgroups service
+sudo rc-update add cgroups
+sudo rc-service cgroups start
+
+# Enable Podman socket
+sudo podman system service -t 0 &
+sudo ls -l /run/podman/podman.sock
+
+# ==================================================
+
+vim ~/.bashrc
+
+# add this script
+alias ll='ls al'
+export EDITOR=vim
+export VISUAL=vim

@@ -67,4 +67,28 @@ sudo systemctl restart getty@tty1
 
 # ==============================================================
 
+# change repo
+
 sudo sed -i 's|https://mr.heru.id|http://kartolo.sby.datautama.net.id/|g' /etc/apt/sources.list
+
+# ==============================================================
+
+# install podman
+
+sudo apt-get -y install podman
+
+sudo vim /etc/containers/registries.conf
+# change: # unqualified-search-registries = ["example.com"]
+unqualified-search-registries = ["docker.io"]
+
+# install portainer
+mkdir -p $HOME/podman/portainer
+sudo podman run -d \
+--name portainer \
+--restart=always \
+-p 9000:9000 \
+-v /run/podman/podman.sock:/var/run/docker.sock \
+-v $HOME/podman/portainer:/data \
+portainer/portainer-ce:alpine
+
+# ==============================================================
