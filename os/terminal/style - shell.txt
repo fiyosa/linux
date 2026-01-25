@@ -1,26 +1,14 @@
-# terminal
+vim ~/.bashrc_shell
+# copy&paster script below
+# exit
 
-## edit style
-# create file on C:\Users\{user} => .wezterm.lua
------------------Add-----------------
-local wezterm = require("wezterm")
-
-return {
-  default_cursor_style = "BlinkingBar", --  BlinkingBar or SteadyBar
-  font = wezterm.font("JetBrainsMono Nerd Font"),
-  font_size = 9.5,
-  color_scheme = "Catppuccin Mocha",
-  initial_cols = 70,
-  initial_rows = 21,
-  window_close_confirmation = "NeverPrompt", -- NeverPrompt / AlwaysPrompt / PromptOnProcesses
-  
-  default_prog = { "C:\\Program Files\\Git\\bin\\bash.exe", "--login", "-i" },
-}
------------------End-----------------
-
-# open git bash
 vim ~/.bashrc
------------------Add-----------------
+[ -f ~/.bashrc_shell ] && source ~/.bashrc_shell
+# exit
+source ~/.bashrc
+
+# ======================================================
+
 _git_branch() {
     if ! command -v git &>/dev/null || ! git rev-parse --is-inside-work-tree &>/dev/null; then
         return
@@ -56,13 +44,14 @@ _update_branch() {
 	PS1="\[\e[0;32m\]┌──(\[\e[0;36m\]\u\[\e[0;32m\]@\[\e[0;35m\]$(_get_ip)\[\e[0;32m\])-[\[\e[0;33m\]\w\[\e[0;32m\]]$(_git_branch)\n\[\e[0;32m\]└─\$\[\e[0m\] "
 }
 PROMPT_COMMAND='_update_branch'
------------------End-----------------
-source ~/.bashrc
-# open file C:\Users\{user}\.bash_profile
------------------Add-----------------
-if [ -f ~/.bashrc ]; then
-  . ~/.bashrc
-fi
------------------End-----------------
 
-## finish
+# this is for yazi (file manager)
+function y() {
+    local tmp cwd    
+    tmp=$(mktemp -t "yazi-cwd.XXXXXX") || return 1
+    yazi "$@" --cwd-file="$tmp"
+    if cwd=$(cat -- "$tmp" 2>/dev/null) && [[ -n "$cwd" && "$cwd" != "$PWD" ]]; then
+        cd -- "$cwd" || echo "Failed to change directory" >&2
+    fi    
+    rm -f -- "$tmp"
+}

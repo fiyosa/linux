@@ -68,7 +68,7 @@ archinstall
 # Disk configuration -> Pre-mounted configuration -> /mnt
 # Profile: driver -> vmware / virtualbox
 # audio -> pipewire
-# Network configuration -> Use NetworkManager
+# Network configuration -> Use NetworkManager (default backend)
 # Optional repo: multilab
 
 =============================================
@@ -127,7 +127,7 @@ sudo reboot now
 
 =============================================
 
-sudo pacman -S tmux fastfetch ranger git
+sudo pacman -S screenfetch htop
 
 =============================================
 

@@ -1,0 +1,9 @@
+superlite + def =>
+
+1) add user accounts with Administrator
+2) ghost toolbox: Visual c++ Redistributables AIO (system)
+3) ghost toolbox: DirectX
+4) ghost toolbox: Microsoft .Net Framework
+
+# change user "Administrator" to "fys"
+control panel -> view by "large" -> user accounts -> Change User Account Control settings -> position 2 from above "Don't notify me..."
