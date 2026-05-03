@@ -1,0 +1,166 @@
+# ================= INFO SISTEM =================
+
+# Cek versi kernel dan arsitektur
+uname -a
+
+# Cek detail OS
+cat /etc/os-release
+
+# Lihat lama server menyala
+uptime -h
+
+# ================= RESOURCE SERVER =================
+
+free -h
+df -h
+df -i
+ps aux --sort=-%cpu | head -20
+ps aux --sort=-%mem | head -20
+
+
+# ================= SERVICE & STATUS =================
+
+systemctl list-units --type=service
+systemctl --failed
+
+
+# ================= USER & AKSES =================
+
+# show ip access putty to vps
+echo $SSH_CLIENT
+
+# show summary brute force
+sudo grep "Failed password" /var/log/auth.log | wc -l
+
+journalctl | grep "Failed password" | grep -oP "from \K\S+" | sort | uniq -c | sort -rn | head -10
+
+
+# ================================== Debian 12 ==================================
+## show ip brute force
+sudo journalctl | grep "Failed password" | grep -oP "from \K\S+" | sort | uniq -c | sort -rn | head -10
+## show user brute force
+journalctl | grep "Failed password" | awk '{print $9}' | sort | uniq -c | sort -rn | head -10
+## reset journalctl
+journalctl --vacuum-size=10M
+# ===============================================================================
+
+
+# ================================== Debian 11 ==================================
+## show ip brute force
+sudo grep "Failed password" /var/log/auth.log | grep -oP "from \K\S+" | sort | uniq -c | sort -rn | head -10
+## show ip & user brute force
+grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -rn | head -10
+## reset auth.log
+sudo cat /dev/null > /var/log/auth.log
+# ===============================================================================
+
+who
+w
+cat /etc/passwd
+getent group sudo
+cat ~/.ssh/authorized_keys
+last
+
+# kill sessions user: ss -tnp | grep :22
+kill -9 PID_USER
+
+
+# ================= CRON & PERSISTENCE =================
+
+crontab -l
+for u in $(cut -f1 -d: /etc/passwd); do crontab -u $u -l 2>/dev/null; done
+ls /etc/cron*
+ls -al /etc/cron*
+cat /etc/ld.so.preload
+
+
+# ================= NETWORK =================
+
+ss -tnp | grep :22
+ss -tulpn
+ss -	
+curl ifconfig.me
+
+
+# ================= CONTAINER =================
+
+docker ps
+
+
+# ================= HARDWARE =================
+
+# Cek CPU
+lscpu
+
+# Cek info memori detail
+cat /proc/meminfo | head
+
+
+# ================= STORAGE =================
+
+# Cek partisi dan mount
+lsblk
+mount | column -t
+
+
+# ================= SECURITY DASAR =================
+
+# Cek firewall (ufw)
+ufw status
+
+# Cek iptables rules
+iptables -L -n -v
+
+# Cek fail2ban
+fail2ban-client status
+
+
+# ================= PROSES MENCURIGAKAN =================
+
+# Proses jalan dari folder aneh
+ps aux | grep -E "/tmp|/dev/shm|\.cache"
+
+# File dengan setuid
+find / -perm -4000 -type f 2>/dev/null
+
+
+# ================= STARTUP PERSISTENCE =================
+
+# Service aktif saat boot
+systemctl list-unit-files --type=service | grep enabled
+
+# Cek rc.local
+cat /etc/rc.local
+
+
+# ================= LOG SISTEM =================
+
+# Log error terbaru
+journalctl -p 3 -xb | head
+
+# Log auth
+tail -n 50 /var/log/auth.log
+
+
+# ================= JARINGAN LANJUT =================
+
+# Routing table
+ip route
+
+# DNS config
+cat /etc/resolv.conf
+
+
+# ================= FILE MENCURIGAKAN =================
+
+# show size file
+ls -alh ~/.bashrc
+
+# show size folder
+du -sh /tmp
+
+# File besar di /tmp
+du -ah /tmp | sort -rh | head
+
+# File baru dibuat hari ini di /tmp
+find /tmp -type f -mtime -1

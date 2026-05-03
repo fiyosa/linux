@@ -1,0 +1,146 @@
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: drone
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: drone-pvc
+  namespace: drone
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 3Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drone
+  namespace: drone
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drone
+  template:
+    metadata:
+      labels:
+        app: drone
+    spec:
+      containers:
+      - name: drone
+        image: drone/drone:2
+        ports:
+        - containerPort: 80
+        env:
+        - name: DRONE_GITHUB_CLIENT_ID
+          value: "Ov23liDwH7NvJbjsKYrT"
+        - name: DRONE_GITHUB_CLIENT_SECRET
+          value: "8900c96c386552f0acd45672c956f16cc4f1c570"
+        - name: DRONE_RPC_SECRET
+          value: "09961242e85afdb908f109151e854394"
+        - name: DRONE_SERVER_HOST
+          value: "drone.fiyosa.me"
+        - name: DRONE_SERVER_PROTO
+          value: "http"
+        - name: DRONE_USER_CREATE
+          value: "username:fiyosa,admin:true"
+        volumeMounts:
+        - name: storage
+          mountPath: /data
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: drone-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: drone
+  namespace: drone
+spec:
+  selector:
+    app: drone
+  ports:
+  - port: 80
+    nodePort: 8000
+  type: NodePort
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: drone-ingress
+  namespace: drone
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: drone.fiyosa.me
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: drone
+            port:
+              number: 80
+EOF
+
+
+kubectl apply -f - <<EOF
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drone-runner
+  namespace: drone
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drone-runner
+  template:
+    metadata:
+      labels:
+        app: drone-runner
+    spec:
+      containers:
+      - name: drone-runner
+        image: drone/drone-runner-kube:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DRONE_RPC_HOST
+          value: "drone.fiyosa.me"
+        - name: DRONE_RPC_PROTO
+          value: "http"
+        - name: DRONE_RPC_SECRET
+          value: "09961242e85afdb908f109151e854394"
+        - name: DRONE_NAMESPACE_DEFAULT
+          value: "drone"
+EOF
+
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: drone-runner
+  namespace: drone
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: drone-runner
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: drone-runner
+  namespace: drone
+EOF

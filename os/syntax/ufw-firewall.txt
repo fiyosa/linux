@@ -1,0 +1,467 @@
+# Tutorial ufw
+
+sudo apt update
+sudo apt install ufw -y
+
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+sudo ufw allow 22
+
+sudo ufw enable
+
+# ======================================================
+
+# configuration
+
+# show rules firewall
+vim /etc/ufw/user.rules
+vim /etc/ufw/user6.rules # for ipv6
+
+# show config ufw (enable=yes, disable=no)
+vim /etc/ufw/ufw.conf
+
+# show config ipv6 (enable=yes, disable=no)
+vim /etc/default/ufw
+# IPV6=yes # default
+
+# reload ufw if change: /etc/default/ufw
+sudo ufw reload 
+
+# show detail status details
+sudo ufw status verbose
+
+# enable ufw
+sudo ufw enable
+
+# enable ufw
+sudo ufw disable
+
+# ======================================================
+
+# delete port with index
+
+# show detail status by number
+sudo ufw status numbered
+
+# delete port spesific number
+sudo ufw delete 4
+
+# ======================================================
+
+# edit rules
+
+# Set default policy - tolak semua incoming, izinkan outgoing
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+# if change ssh please READ FILE sshd.txt
+# open incoming port 22 (for ssh)
+sudo ufw allow 22
+
+# if change ssh please READ FILE sshd.txt
+# delete port 22
+sudo ufw delete allow 22
+
+# open outgoing port 25 (not recommended)
+sudo ufw allow out 25
+
+# ======================================================
+
+# open incomming port with ip spesific (ip putty client, not ip server)
+sudo ufw allow from YOUR_IP to any port 22
+
+# block ip indicate suspicious
+sudo ufw deny from 138.197.150.163
+
+# block ip indicate suspicious priority
+sudo ufw insert 1 deny from 80.94.92.0/24
+
+# ======================================================
+
+# ufw for docker (MANDATORY)
+
+vim /etc/ufw/after.rules
+# copy&paste script below on last row  file
+ufw reload
+ufw route allow proto tcp from any to any port 80
+
+
+# BEGIN UFW AND DOCKER
+*filter
+:ufw-user-forward - [0:0]
+:ufw-docker-logging-deny - [0:0]
+:DOCKER-USER - [0:0]
+-A DOCKER-USER -j ufw-user-forward
+
+-A DOCKER-USER -m conntrack --ctstate RELATED,ESTABLISHED -j RETURN
+-A DOCKER-USER -m conntrack --ctstate INVALID -j DROP
+-A DOCKER-USER -i docker0 -o docker0 -j ACCEPT
+
+-A DOCKER-USER -j RETURN -s 10.0.0.0/8
+-A DOCKER-USER -j RETURN -s 172.16.0.0/12
+-A DOCKER-USER -j RETURN -s 192.168.0.0/16
+
+-A DOCKER-USER -j ufw-docker-logging-deny -m conntrack --ctstate NEW -d 10.0.0.0/8
+-A DOCKER-USER -j ufw-docker-logging-deny -m conntrack --ctstate NEW -d 172.16.0.0/12
+-A DOCKER-USER -j ufw-docker-logging-deny -m conntrack --ctstate NEW -d 192.168.0.0/16
+
+-A DOCKER-USER -j RETURN
+
+-A ufw-docker-logging-deny -m limit --limit 3/min --limit-burst 10 -j LOG --log-prefix "[UFW DOCKER BLOCK] "
+-A ufw-docker-logging-deny -j DROP
+
+COMMIT
+# END UFW AND DOCKER
+
+# ======================================================
+
+mkdir -p ~/run
+vim ~/run/gufw.sh
+# copy&paste script below
+chmod +x ~/run/gufw.sh
+echo "alias gufw='sudo ~/run/gufw.sh'" >> ~/.bashrc
+source ~/.bashrc
+
+#!/bin/bash
+# UFW Interactive Manager
+
+while true; do
+    clear
+    echo "=============================="
+    echo "       UFW Manager v1.3       "
+    echo "=============================="
+    echo "1.  Show UFW status"
+    echo "2.  Enable UFW"
+    echo "3.  Disable UFW"
+    echo "4.  Reload UFW"
+    echo "5.  Add rule - allow IP to port"
+    echo "6.  Add rule - allow port (all IP)"
+    echo "7.  Add rule - deny IP/port"
+    echo "8.  Show all rules (numbered)"
+    echo "9.  Delete rule (by number)"
+    echo "10. Set default policy"
+    echo "11. Rate limit port"
+    echo "12. Reset UFW"
+    echo "13. Check my public IP"
+    echo "0.  Exit"
+    echo "=============================="
+    read -r -p "Select option: " choice
+
+    case $choice in
+        1)
+            clear
+            echo "=== UFW Status ==="
+            echo ""
+            sudo ufw status verbose
+            echo ""
+            echo "=============================="
+            read -r -p "Press enter to return to menu..." dummy
+            ;;
+        2)
+            clear
+            echo "⚠️  Make sure SSH is allowed before enabling UFW!"
+            echo ""
+            read -r -p "Continue enable UFW? (y/n): " confirm
+            if [ "$confirm" = "y" ]; then
+                sudo ufw enable
+                echo ""
+                echo "✓ UFW successfully enabled"
+            else
+                echo "Cancelled."
+            fi
+            echo ""
+            read -r -p "Press enter to return to menu..." dummy
+            ;;
+        3)
+            clear
+            echo "⚠️  This will disable the firewall!"
+            echo ""
+            read -r -p "Continue disable UFW? (y/n): " confirm
+            if [ "$confirm" = "y" ]; then
+                sudo ufw disable
+                echo ""
+                echo "✓ UFW successfully disabled"
+            else
+                echo "Cancelled."
+            fi
+            echo ""
+            read -r -p "Press enter to return to menu..." dummy
+            ;;
+        4)
+            clear
+            echo "=== Reloading UFW ==="
+            echo ""
+            sudo ufw reload
+            echo ""
+            echo "✓ UFW successfully reloaded"
+            echo ""
+            read -r -p "Press enter to return to menu..." dummy
+            ;;
+        5)
+            clear
+            echo "=== Add Rule: Allow IP to Port ==="
+            echo ""
+            read -r -p "Enter IP address (or subnet e.g. 192.168.1.0/24): " ip
+            read -r -p "Enter port: " port
+            read -r -p "Protocol (tcp/udp/leave blank for both): " proto
+            echo ""
+            if [ -z "$proto" ]; then
+                sudo ufw allow from "$ip" to any port "$port"
+            else
+                sudo ufw allow from "$ip" to any port "$port" proto "$proto"
+            fi
+            echo ""
+            echo "✓ Rule successfully added!"
+            echo ""
+            sudo ufw status numbered
+            echo ""
+            read -r -p "Press enter to return to menu..." dummy
+            ;;
+        6)
+            clear
+            echo "=== Add Rule: Allow Port (All IPs) ==="
+            echo ""
+            read -r -p "Enter port: " port
+            read -r -p "Protocol (tcp/udp/leave blank for both): " proto
+            echo ""
+            if [ -z "$proto" ]; then
+                sudo ufw allow "$port"
+            else
+                sudo ufw allow "$port/$proto"
+            fi
+            echo ""
+            echo "✓ Port $port successfully opened for all IPs!"
+            echo ""
+            sudo ufw status numbered
+            echo ""
+            read -r -p "Press enter to return to menu..." dummy
+            ;;
+        7)
+            clear
+            echo "=== Add Rule: Deny IP/Port ==="
+            echo ""
+            echo "Select deny type:"
+            echo "1. Deny specific IP"
+            echo "2. Deny specific port"
+            echo "3. Deny IP to specific port"
+            echo "4. Deny subnet (e.g. 192.168.1.0/24)"
+            echo ""
+            read -r -p "Select: " deny_type
+            echo ""
+            case $deny_type in
+                1)
+                    read -r -p "Enter IP to deny: " ip
+                    sudo ufw insert 1 deny from "$ip"
+                    ;;
+                2)
+                    read -r -p "Enter port to deny: " port
+                    sudo ufw deny "$port"
+                    ;;
+                3)
+                    read -r -p "Enter IP: " ip
+                    read -r -p "Enter port: " port
+                    sudo ufw insert 1 deny from "$ip" to any port "$port"
+                    ;;
+                4)
+                    read -r -p "Enter subnet (e.g. 192.168.1.0/24): " subnet
+                    sudo ufw insert 1 deny from "$subnet"
+                    ;;
+                *)
+                    echo "❌ Invalid option"
+                    ;;
+            esac
+            echo ""
+            echo "✓ Deny rule successfully added!"
+            echo ""
+            sudo ufw status numbered
+            echo ""
+            read -r -p "Press enter to return to menu..." dummy
+            ;;
+        8)
+            clear
+            echo "=== All Rules (Numbered) ==="
+            echo ""
+            sudo ufw status numbered
+            echo ""
+            read -r -p "Press enter to return to menu..." dummy
+            ;;
+        9)
+            clear
+            echo "=== Delete Rule ==="
+            echo ""
+            sudo ufw status numbered
+            echo ""
+            read -r -p "Enter rule number to delete (or 0 to cancel): " num
+            echo ""
+            if [ "$num" != "0" ] && [ -n "$num" ]; then
+                echo "y" | sudo ufw delete "$num"
+                echo ""
+                echo "✓ Rule #$num successfully deleted!"
+                echo ""
+                echo "=== Updated Rules ==="
+                sudo ufw status numbered
+            else
+                echo "Cancelled."
+            fi
+            echo ""
+            read -r -p "Press enter to return to menu..." dummy
+            ;;
+        10)
+            clear
+            echo "=== Set Default Policy ==="
+            echo ""
+            echo "1. Incoming: deny, Outgoing: allow  (Recommended)"
+            echo "2. Incoming: allow, Outgoing: allow (Not secure)"
+            echo "3. Incoming: deny, Outgoing: deny   (High security)"
+            echo "4. Custom"
+            echo ""
+            read -r -p "Select: " policy_choice
+            echo ""
+            case $policy_choice in
+                1)
+                    sudo ufw default deny incoming
+                    sudo ufw default allow outgoing
+                    echo "✓ Policy set: deny incoming, allow outgoing"
+                    ;;
+                2)
+                    sudo ufw default allow incoming
+                    sudo ufw default allow outgoing
+                    echo "✓ Policy set: allow incoming, allow outgoing"
+                    ;;
+                3)
+                    sudo ufw default deny incoming
+                    sudo ufw default deny outgoing
+                    echo "✓ Policy set: deny incoming, deny outgoing"
+                    ;;
+                4)
+                    read -r -p "Incoming policy (allow/deny/reject): " in_policy
+                    read -r -p "Outgoing policy (allow/deny/reject): " out_policy
+                    sudo ufw default "$in_policy" incoming
+                    sudo ufw default "$out_policy" outgoing
+                    echo "✓ Custom policy applied"
+                    ;;
+                *)
+                    echo "❌ Invalid option"
+                    ;;
+            esac
+            echo ""
+            read -r -p "Press enter to return to menu..." dummy
+            ;;
+        11)
+            clear
+            echo "=== Rate Limit Port ==="
+            echo ""
+            echo "Rate limit will AUTO-BLOCK IP that connects"
+            echo "more than 6 times in 30 seconds!"
+            echo ""
+            echo "1. Limit port 22   (SSH)      - Recommended!"
+            echo "2. Limit port 2222 (SSH alt)"
+            echo "3. Limit custom port"
+            echo "4. Remove rate limit from port"
+            echo "5. Show all limited ports"
+            echo ""
+            read -r -p "Select: " limit_choice
+            echo ""
+            case $limit_choice in
+                1)
+                    sudo ufw limit 22/tcp
+                    echo ""
+                    echo "✓ Rate limit applied to port 22 (SSH)"
+                    echo "  Auto-block: 6 attempts in 30 seconds"
+                    ;;
+                2)
+                    sudo ufw limit 2222/tcp
+                    echo ""
+                    echo "✓ Rate limit applied to port 2222 (SSH alt)"
+                    echo "  Auto-block: 6 attempts in 30 seconds"
+                    ;;
+                3)
+                    read -r -p "Enter port to limit: " port
+                    read -r -p "Protocol (tcp/udp/leave blank for both): " proto
+                    echo ""
+                    if [ -z "$proto" ]; then
+                        sudo ufw limit "$port"
+                    else
+                        sudo ufw limit "$port/$proto"
+                    fi
+                    echo ""
+                    echo "✓ Rate limit applied to port $port"
+                    echo "  Auto-block: 6 attempts in 30 seconds"
+                    ;;
+                4)
+                    echo "=== Current Limited Ports ==="
+                    sudo ufw status | grep LIMIT
+                    echo ""
+                    read -r -p "Enter port to remove limit: " port
+                    read -r -p "Protocol (tcp/udp/leave blank for both): " proto
+                    echo ""
+                    if [ -z "$proto" ]; then
+                        sudo ufw delete limit "$port"
+                    else
+                        sudo ufw delete limit "$port/$proto"
+                    fi
+                    echo ""
+                    echo "✓ Rate limit removed from port $port"
+                    ;;
+                5)
+                    echo "=== Rate Limited Ports ==="
+                    echo ""
+                    sudo ufw status | grep LIMIT
+                    if ! sudo ufw status | grep -q LIMIT; then
+                        echo "No rate limited ports found."
+                    fi
+                    ;;
+                *)
+                    echo "❌ Invalid option"
+                    ;;
+            esac
+            echo ""
+            sudo ufw status numbered
+            echo ""
+            read -r -p "Press enter to return to menu..." dummy
+            ;;
+        12)
+            clear
+            echo "=== Reset UFW ==="
+            echo ""
+            echo "⚠️  WARNING: This will delete ALL UFW rules!"
+            echo ""
+            read -r -p "Are you sure? (type 'YES' to confirm): " confirm
+            echo ""
+            if [ "$confirm" = "YES" ]; then
+                sudo ufw --force reset
+                echo ""
+                echo "✓ UFW successfully reset"
+            else
+                echo "Reset cancelled."
+            fi
+            echo ""
+            read -r -p "Press enter to return to menu..." dummy
+            ;;
+        13)
+            clear
+            echo "=== Your Public IP ==="
+            echo ""
+            echo -n "IPv4: "
+            curl -4 -s --max-time 5 ifconfig.me || echo "Not available"
+            echo ""
+            echo -n "IPv6: "
+            curl -6 -s --max-time 5 ifconfig.me 2>/dev/null || echo "Not available"
+            echo ""
+            echo ""
+            read -r -p "Press enter to return to menu..." dummy
+            ;;
+        0)
+            clear
+            echo "Thank you for using UFW Manager!"
+            echo ""
+            exit 0
+            ;;
+        *)
+            echo ""
+            echo "❌ Invalid option, please try again"
+            sleep 1
+            ;;
+    esac
+done

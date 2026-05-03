@@ -1,0 +1,113 @@
+docker network create proxy
+
+docker run -d \
+  --name nginx-proxy \
+  --restart always \
+  -p 80:80 \
+  -v ~/docker/nginx/conf.d:/etc/nginx/conf.d \
+  --network proxy \
+  nginx:alpine
+  
+# set network all containers to proxy
+
+# reload nginx-proxy after edit folder ~/docker/nginx/conf.d
+docker exec nginx-proxy nginx -s reload
+
+# =======================
+
+# install basic auth
+
+docker exec nginx-proxy rm /etc/nginx/.htpasswd
+docker exec nginx-proxy apk add apache2-utils
+docker exec nginx-proxy htpasswd -cb /etc/nginx/.htpasswd admin passwordkamu
+
+# check password
+docker exec -it nginx-proxy htpasswd -v /etc/nginx/.htpasswd nginx
+
+# show .conf
+docker exec nginx-proxy cat /etc/nginx/conf.d/dbgate.conf
+
+# logout
+http://logout@dbgate.fiyosa.me
+  
+# =======================
+
+# conf.d/portainer.conf
+
+server {
+    listen 80;
+    server_name portainer.fiyosa.me;
+
+    location / {
+        proxy_pass http://portainer:9000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+
+# conf.d/garage.conf
+
+server {
+    listen 80;
+    server_name garage.fiyosa.me;
+
+    location / {
+        proxy_pass http://garage-ui:3909;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+
+# conf.d/basic-auth.conf
+
+server {
+    listen 80;
+    server_name anjay.fiyosa.me;
+
+    auth_basic "Restricted";
+    auth_basic_user_file /etc/nginx/.htpasswd;
+
+    location / {
+        proxy_pass http://anjay:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+}
+
+# conf.d/dbgate.conf
+
+server {
+    listen 80;
+    server_name dbgate.fiyosa.me;
+
+    auth_basic "Restricted";
+    auth_basic_user_file /etc/nginx/.htpasswd;
+
+    location / {
+        auth_basic "Restricted";
+        auth_basic_user_file /etc/nginx/.htpasswd;
+        proxy_pass http://dbgate:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+
+    location /config {
+        auth_basic off;
+        proxy_pass http://dbgate:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    location /stream {
+        auth_basic off;
+        proxy_pass http://dbgate:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+}

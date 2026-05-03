@@ -1,0 +1,87 @@
+# installation
+
+curl -sSf https://get.k0s.sh | sudo sh
+sudo k0s install controller --single
+sudo k0s start # wait a minute
+
+echo "alias kubectl='k0s kubectl'" >> ~/.bashrc
+source ~/.bashrc
+
+sudo k0s kubectl get nodes
+
+# ================================================================================
+
+## open port kubernetes 1-65535
+
+k0s config create > /etc/k0s/k0s.yaml
+vim/etc/k0s/k0s.yaml
+
+# ========== BEFORE ==========
+api:
+  address: 172.19.65.190
+  ca:
+    certificatesExpireAfter: 8760h0m0s
+    expiresAfter: 87600h0m0s
+  k0sApiPort: 9443
+  port: 
+# ========== AFTER ==========    
+api:
+  address: 172.19.65.190
+  ca:
+    certificatesExpireAfter: 8760h0m0s
+    expiresAfter: 87600h0m0s
+  k0sApiPort: 9443
+  port: 6443
+  extraArgs:
+    service-node-port-range: 1-65535
+# ========== END ==========
+
+systemctl restart k0scontroller.service
+kubectl get nodes # wait 3 minutes
+
+# ================================================================================
+
+## install Storage Classes
+
+kubectl apply -f - <<EOF
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-path
+provisioner: rancher.io/local-path
+reclaimPolicy: Retain
+volumeBindingMode: WaitForFirstConsumer
+EOF
+
+# ================================================================================
+
+# change directory Storage Classes
+
+kubectl edit configmap local-path-config -n local-path-storage
+
+# ========== START ==========
+{
+  "nodePathMap": [
+    {
+      "node": "DEFAULT_PATH_FOR_NON_LISTED_NODES",
+      "paths": ["/root/kubernetes"]
+    }
+  ]
+}
+# ========== STOP ===========
+
+kubectl rollout restart deployment local-path-provisioner -n local-path-storage
+
+# ================================================================================
+
+## show all images
+k0s ctr images ls | awk '{print  $4, $1}' | tail -n +2
+
+## delete images not used
+k0s ctr images prune
+
+## delete images not used
+sudo k0s ctr -n k8s.io images ls -q | grep '^sha256:' | xargs -r sudo k0s ctr -n k8s.io images rm
+sudo k0s ctr -n k8s.io images ls -q | grep '@sha256:' | xargs -r sudo k0s ctr -n k8s.io images rm
+
+

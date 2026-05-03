@@ -1,0 +1,18 @@
+vim ~/.vimrc
+
+# ============ ~/.vimrc ============
+syntax on           " warna syntax
+set tabstop=2       " lebar tab = 2 spasi
+set shiftwidth=2    " lebar indent = 2 spasi
+set expandtab       " tab diubah jadi spasi
+set autoindent      " indent otomatis mengikuti baris sebelumnya
+set hlsearch        " highlight hasil pencarian
+set ignorecase      " pencarian tidak case-sensitive
+set smartcase       " case-sensitive jika ada huruf besar
+set mouse=a         " aktifkan mouse
+set noswapfile      " tidak membuat file swap
+
+set wrap            " wrap teks panjang or 'nowrap'
+set number          " nomor baris or 'nonumber'
+set relativenumber  " nomor baris relatif or 'norelativenumber'
+# ==================================

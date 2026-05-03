@@ -1,4 +1,4 @@
-FROM alpine:3.23.2
+FROM alpine:3.23.3
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ RUN echo "http://mirror.jingk.ai/alpine/v3.23/main" > /etc/apk/repositories \
 
 RUN apk update && apk add --no-cache vim curl htop
 
-RUN apk add --no-cache nodejs npm
+RUN apk add --no-cache nodejs npm yarn
 
 RUN apk add --no-cache composer
 
@@ -48,6 +48,10 @@ RUN rm -rf /var/cache/apk/*
 CMD ["sh"]
 
 # ================================================
+
+https://pkgs.alpinelinux.org/packages
+
+docker build -t alpine3.23.3_php8.4_composer2.9_nodejs24.13 .
 
 # docker image rm alpine-custom
 # docker build -t alpine-custom .

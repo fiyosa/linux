@@ -34,6 +34,32 @@ PATH=$PATH:usr/bin:
 
 # ==============================================================
 
+# change repo mirrors to singapore
+
+vim /etc/apt/sources.list
+
+sudo apt install netselect-apt
+
+# for debian 11
+CODENAME=$(. /etc/os-release && echo $VERSION_CODENAME) && \
+sudo netselect-apt stable -nc SG -o /etc/apt/sources.list && \
+sudo sed -i "s/ stable/ $CODENAME/g; s|security.debian.org/ $CODENAME/updates|security.debian.org/debian-security $CODENAME-security|g" /etc/apt/sources.list && \
+MIRROR=$(grep "^deb http" /etc/apt/sources.list | head -1 | awk '{print $2}') && \
+echo "deb $MIRROR $CODENAME-updates main contrib non-free" | sudo tee -a /etc/apt/sources.list
+
+# for debian >=12
+CODENAME=$(. /etc/os-release && echo $VERSION_CODENAME) && \
+sudo netselect-apt stable -nc SG -o /etc/apt/sources.list && \
+sudo sed -i \
+  "s/ stable/ $CODENAME/g; \
+   s|security.debian.org/ $CODENAME/updates|security.debian.org/debian-security $CODENAME-security|g; \
+   s/non-free$/non-free non-free-firmware/g" /etc/apt/sources.list && \
+MIRROR=$(grep "^deb http" /etc/apt/sources.list | head -1 | awk '{print $2}') && \
+echo "deb $MIRROR $CODENAME-updates main contrib non-free non-free-firmware" | sudo tee -a /etc/apt/sources.list && \
+echo "deb $MIRROR $CODENAME-backports main contrib non-free non-free-firmware" | sudo tee -a /etc/apt/sources.list
+
+# ==============================================================
+
 # implement package install suggestion on Debian
 sudo apt install -y command-not-found htop screenfetch curl wget vim git unzip
 sudo apt update -y

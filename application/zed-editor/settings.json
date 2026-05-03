@@ -7,25 +7,49 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "agent_servers": {
+    "kilo": {
+      "favorite_config_option_values": {
+        "model": [
+          "kilo/nvidia/nemotron-3-super-120b-a12b:free", // for planning
+          "kilo/x-ai/grok-code-fast-1:optimized:free", // for coding
+          "kilo/poolside/laguna-m.1:free", // for task minor
+        ],
+      },
+      "type": "registry",
+    },
+    "gemini": {
+      "type": "registry",
+    },
+  },
+  "agent_ui_font_size": 12,
+
+  "git_panel": {
+    "tree_view": false,
+  },
   "theme": {
-    "mode": "system",
+    "mode": "dark",
     "light": "One Light",
-    "dark": "Cobalt2"
+    "dark": "Cobalt2",
   },
   "terminal": {
     "dock": "bottom",
     "shell": {
-      "program": "C:/Program Files/Git/bin/bash.exe"
-    }
+      "program": "C:/Program Files/Git/bin/bash.exe",
+    },
   },
   "auto_update": false,
   "base_keymap": "VSCode",
-  "icon_theme": "VSCode Great Icons Theme",
+  "icon_theme": {
+    "mode": "light",
+    "light": "VSCode Great Icons Theme",
+    "dark": "VSCode Great Icons Theme",
+  },
   "collaboration_panel": { "dock": "right" },
   "outline_panel": { "dock": "right" },
   "telemetry": { "diagnostics": false, "metrics": false },
   "minimap": { "show": "never" },
-  "ui_font_size": 16,
+  "ui_font_size": 15,
   "buffer_font_size": 12,
 
   "project_panel": { "dock": "right" },
@@ -35,41 +59,103 @@
   "format_on_save": "on",
 
   "languages": {
+    "CSS": {
+      "language_servers": ["vscode-css-language-server", "..."],
+    },
+    "HTML": {
+      "language_servers": ["vscode-html-language-server", "..."],
+    },
     "Go": {
-      "tab_size": 4
+      "tab_size": 4,
     },
     "PHP": {
       "tab_size": 4,
       "format_on_save": "on",
-      "language_servers": ["intelephense", "!phpactor"]
+      "language_servers": ["intelephense", "!phpactor"],
     },
 
     // Use eslint for all of the formatting as it will use the eslint.config.js file, which includes prettier.
     "Vue.js": {
-      "language_servers": ["vue-language-server", "vtsls", "..."],
-      "prettier": { "allowed": true }
-      // "formatter": [{ "code_action": "source.fixAll.eslint" }]
+      "language_servers": ["vue-language-server", "vtsls", "!eslint", "..."],
+      "prettier": { "allowed": true },
+      // "formatter": [{ "code_action": "source.fixAll.eslint" }] // if allowed them comments "prettier"
     },
     "TypeScript": {
-      "language_servers": ["vtsls", "!typescript-language-server", "..."],
-      "prettier": { "allowed": true }
-      // "formatter": [{ "code_action": "source.fixAll.eslint" }]
+      "language_servers": [
+        "vtsls",
+        "!typescript-language-server",
+        "!eslint",
+        "...",
+      ],
+      "prettier": { "allowed": true },
+      // "formatter": [{ "code_action": "source.fixAll.eslint" }] // if allowed them comments "prettier"
     },
     "TSX": {
-      "language_servers": ["vtsls", "!typescript-language-server", "..."],
-      "prettier": { "allowed": true }
-      // "formatter": [{ "code_action": "source.fixAll.eslint" }]
+      "language_servers": [
+        "vtsls",
+        "!typescript-language-server",
+        "!eslint",
+        "...",
+      ],
+      "prettier": { "allowed": true },
+      // "formatter": [{ "code_action": "source.fixAll.eslint" }] // if allowed them comments "prettier"
     },
     "JavaScript": {
-      "language_servers": ["vtsls", "!typescript-language-server", "..."],
-      "prettier": { "allowed": true }
-      // "formatter": [{ "code_action": "source.fixAll.eslint" }]
-    }
+      "language_servers": [
+        "vtsls",
+        "!typescript-language-server",
+        "!eslint",
+        "...",
+      ],
+      "prettier": { "allowed": true },
+      // "formatter": [{ "code_action": "source.fixAll.eslint" }] // if allowed them comments "prettier"
+    },
+    "Svelte": {
+      "language_servers": ["svelte-language-server", "!eslint", "..."],
+      "prettier": { "allowed": true },
+      // "formatter": [{ "code_action": "source.fixAll.eslint" }] // if allowed them comments "prettier"
+    },
+    "JSON": {
+      "language_servers": ["!package-version-server", "..."],
+    },
   },
 
   "file_types": {
     "PHP": ["*.php"],
-    "Blade": ["*.blade.php"]
+    "Blade": ["*.blade.php"],
+  },
+
+  "lsp": {
+    "eslint": {},
+    "tailwindcss-language-server": {
+      "settings": {
+        "includeLanguages": {
+          "svelte": "html",
+          "vue": "html",
+        },
+        "experimental": {
+          "classRegex": [
+            "[cls|className]\\s\\:\\=\\s\"([^\"]*)",
+            "class=\"([^\"]*)\"",
+            "class='([^']*)'",
+            "class:\\s*([^\\s{]+)",
+            "\\{\\s*class:\\s*\"([^\"]*)\"",
+            "\\{\\s*class:\\s*'([^']*)'",
+            ":class=\"([^\"]*)\"",
+            ":class='([^']*)'",
+            "\\.className\\s*[+]?=\\s*['\"]([^'\"]*)['\"]",
+            "\\.setAttributeNS\\(.*,\\s*['\"]class['\"],\\s*['\"]([^'\"]*)['\"]",
+            "\\.setAttribute\\(['\"]class['\"],\\s*['\"]([^'\"]*)['\"]",
+            "\\.classList\\.add\\(['\"]([^'\"]*)['\"]",
+            "\\.classList\\.remove\\(['\"]([^'\"]*)['\"]",
+            "\\.classList\\.toggle\\(['\"]([^'\"]*)['\"]",
+            "\\.classList\\.contains\\(['\"]([^'\"]*)['\"]",
+            "\\.classList\\.replace\\(\\s*['\"]([^'\"]*)['\"]",
+            "\\.classList\\.replace\\([^,)]+,\\s*['\"]([^'\"]*)['\"]",
+          ],
+        },
+      },
+    },
   },
 
   "file_scan_exclusions": [
@@ -81,6 +167,10 @@
     "**/.DS_Store",
     "**/Thumbs.db",
     "**/.classpath",
-    "**/.settings"
-  ]
+    "**/.settings",
+  ],
+
+  "toolbar": {
+    "breadcrumbs": false,
+  },
 }

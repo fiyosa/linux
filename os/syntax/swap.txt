@@ -1,0 +1,72 @@
+# Check swap
+free -h
+swapon --show
+
+# create file swap 2 GB
+fallocate -l 2G /swapfile
+# if failed, use:
+dd if=/dev/zero of=/swapfile bs=1M count=2048 status=progress
+
+# setting permission
+chmod 600 /swapfile
+
+# format to swap
+mkswap /swapfile
+
+# turn on swap
+swapon /swapfile
+
+# buat permanen setelah reboot
+echo '/swapfile none swap sw 0 0' >> /etc/fstab
+
+# Mount & aktifkan swap dari fstab (opsional, langsung aktif tanpa reboot)
+sudo mount -a
+sudo swapon -a
+
+# Check swap
+swapon --show
+free -h
+
+# ========================================================
+
+## setting swappiness# description
+
+Swappiness adalah angka yang mengatur kapan Linux mulai pakai swap.
+Kernel punya skala 0 sampai 100.
+Nilai	Dampak
+0		Hampir tidak pakai swap
+10		Pakai swap hanya saat RAM mulai penuh
+60		Default banyak distro. Lebih cepat pakai swap
+100		Sangat agresif pakai swap
+
+# check
+cat /proc/sys/vm/swappiness
+
+# set swappiness
+sysctl vm.swappiness=10
+
+# set permanent
+echo 'vm.swappiness=10' >> /etc/sysctl.conf
+
+# show all
+sysctl -p
+
+# ========================================================
+
+# Create zram
+
+swapon --show
+
+apt install zram-tools
+
+vim /etc/default/zramswap
+ALGO=lz4
+PERCENT=50
+PRIORITY=100
+# :wq
+
+systemctl restart zramswap
+systemctl start zramswap
+systemctl enable zramswap
+
+swapon --show

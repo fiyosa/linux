@@ -9,7 +9,12 @@ https://youtu.be/mWl4P6DOt9M?si=UsOz6VKU2In5ZN1o
 
 # setup archinstall
 setfont -d # increase size font (optional)
-pacman -Sy && pacman -Sy --noconfirm archlinux-keyring archinstall
+
+# setup archinstall (NOT RECOMMENDED)
+pacman -Sy archlinux-keyring		# Update keyring dulu TERPISAH sebelum yang lain
+pacman-key --init					# Init keyring 
+pacman-key --populate archlinux		# populate keyring
+pacman -S archinstall				# install archinstall
 
 lsblk # show all partition
 cfdisk /dev/sda # ex.: cfdisk /dev/{partition}

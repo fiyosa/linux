@@ -1,0 +1,63 @@
+# install kubernetes dashboard
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/headlamp/main/kubernetes-headlamp.yaml
+
+kubectl patch svc headlamp -n kube-system -p '{"spec":{"type":"NodePort","ports":[{"port":80,"nodePort":9000}]}}'
+
+# ==========================================================================
+
+## create token admin
+
+kubectl -n kube-system create serviceaccount headlamp-admin
+kubectl create clusterrolebinding headlamp-admin --serviceaccount=kube-system:headlamp-admin --clusterrole=cluster-admin
+
+# buat secret baru
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Secret
+metadata:
+  name: headlamp-admin-token
+  namespace: kube-system
+  annotations:
+    kubernetes.io/service-account.name: headlamp-admin
+type: kubernetes.io/service-account-token
+EOF
+
+# get secret token
+kubectl get secret headlamp-admin-token -n kube-system -o jsonpath='{.data.token}' | base64 -d
+
+# ==========================================================================
+
+## create token guest (view only)
+
+# buat serviceaccount
+kubectl -n kube-system create serviceaccount headlamp-guest
+
+# buat clusterrolebinding dengan role view
+kubectl create clusterrolebinding headlamp-guest \
+  --serviceaccount=kube-system:headlamp-guest \
+  --clusterrole=view
+
+# buat secret baru
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Secret
+metadata:
+  name: headlamp-guest-token
+  namespace: kube-system
+  annotations:
+    kubernetes.io/service-account.name: headlamp-guest
+type: kubernetes.io/service-account-token
+EOF
+
+# get secret token
+kubectl get secret headlamp-guest-token -n kube-system -o jsonpath='{.data.token}' | base64 -d
+
+# ==========================================================================
+
+## hapus secret lama
+kubectl delete secret headlamp-admin-token -n kube-system
+
+## delete token
+kubectl delete serviceaccount headlamp-admin -n kube-system
+kubectl delete clusterrolebinding headlamp-admin

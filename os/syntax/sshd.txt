@@ -1,0 +1,68 @@
+# change port ssh
+
+vim /etc/ssh/sshd_config
+# change: "Port 22" to "Port 2222"
+sudo systemctl restart sshd
+
+# =====================================================================
+
+# setup banned IP if fail login ssh
+
+apt install fail2ban
+
+cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+
+vim /etc/fail2ban/jail.local
+# search line 274: /\V[sshd]
+
+# =========== /etc/fail2ban/jail.local ===========
+[sshd]
+enabled   = true
+port      = 2222
+filter    = sshd
+backend   = systemd
+logpath   = /var/log/auth.log
+maxretry  = 5
+findtime  = 10m
+bantime   = 24h
+# ================================================
+
+systemctl restart fail2ban
+systemctl enable fail2ban
+systemctl status fail2ban
+
+
+# Cek status jail SSH
+fail2ban-client status sshd
+
+# Cek log fail2ban
+tail -f /var/log/fail2ban.log
+
+# Cek apakah fail2ban aktif
+fail2ban-client ping
+
+
+# Lihat semua IP yang diban
+fail2ban-client status sshd
+
+# Unban IP tertentu
+fail2ban-client set sshd unbanip <IP_ADDRESS>
+
+# Ban IP manual
+fail2ban-client set sshd banip <IP_ADDRESS>
+
+# ================================================
+
+# ready to monitor
+
+# for debian 11
+alias uf='sudo grep "Failed password" /var/log/auth.log | grep -oP "from \K\S+" | sort | uniq -c | sort -rn | head -10'
+alias ufd='cat /dev/null > /var/log/auth.log'
+
+# for debian >= 12
+alias uf='sudo journalctl _SYSTEMD_UNIT=ssh.service | grep -oP "from \K\S+" | sort | uniq -c | sort -rn | head -10'
+alias ufd='sudo journalctl --rotate && sudo journalctl --vacuum-time=1s'
+alias ufds='sudo journalctl --disk-usage'
+
+alias ufb='fail2ban-client status sshd'
+alias us='ufw status numbered'

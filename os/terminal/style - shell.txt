@@ -2,48 +2,59 @@ vim ~/.bashrc_shell
 # copy&paster script below
 # exit
 
-vim ~/.bashrc
-[ -f ~/.bashrc_shell ] && source ~/.bashrc_shell
-# exit
+echo 'export EDITOR=vim' >> ~/.bashrc
+echo 'export VISUAL=vim' >> ~/.bashrc
+
+# install suggestion completion (bash-completion)
+sudo apt install bash-completion
+
+# add style shell
+echo '[ -f ~/.bashrc_shell ] && source ~/.bashrc_shell' >> ~/.bashrc
+
+# apply all
 source ~/.bashrc
 
 # ======================================================
 
 _git_branch() {
-    if ! command -v git &>/dev/null || ! git rev-parse --is-inside-work-tree &>/dev/null; then
-        return
+    command -v git >/dev/null 2>&1 || return
+    git rev-parse --is-inside-work-tree >/dev/null 2>&1 || return
+
+    local branch status gitdir
+    branch=$(git symbolic-ref --short HEAD 2>/dev/null) || \
+    branch=$(git rev-parse --short HEAD 2>/dev/null) || return
+
+    # Potong jika terlalu panjang
+    branch=${branch:0:20}
+
+    # Merge conflict
+    if git rev-parse -q --verify MERGE_HEAD >/dev/null 2>&1; then
+        git diff --name-only --diff-filter=U | grep -q . && status="|MERGE"
+    else
+        # Perubahan file
+        git diff --quiet 2>/dev/null || status="|*"
+        git diff --cached --quiet 2>/dev/null || status="|*"
     fi
-    
-    local branch=$(git branch --show-current 2>/dev/null)
-    local status=""
-    
-    # Jika dalam detached HEAD state, gunakan hash commit pendek
-    if [ -z "$branch" ]; then
-        branch=$(git rev-parse --short HEAD 2>/dev/null)
-    fi
-    
-    # Check for merge conflicts first (highest priority)
-    if [ -f "$(git rev-parse --show-toplevel)/.git/MERGE_HEAD" ]; then
-        if git diff --name-only --diff-filter=U | grep -q .; then
-            status="|MERGE"
-        fi
-    # Check for uncommitted changes
-    elif ! git diff --quiet 2>/dev/null || ! git diff --cached --quiet 2>/dev/null; then
-        status="|*"
-    fi
-    
-    [ -n "$branch" ] && echo "-(\[\e[0;34m\]$branch$status\[\e[0;32m\])"
+
+    echo "-(\[\e[0;34m\]$branch$status\[\e[0;32m\])"
 }
+
 _get_ip() {
-  local ip
-  ip=$(ip -4 -o a show scope global 2>/dev/null | awk '{print $4}' | cut -d/ -f1 | head -n1)
-  #[[ -z "$ip" ]] && ip="localhost"
-  echo "${ip:-$(hostname)}"
+    command -v ip >/dev/null 2>&1 && \
+    ip -4 -o a show scope global 2>/dev/null | awk '{print $4}' | cut -d/ -f1 | head -n1 || hostname
 }
+
 _update_branch() {
-	PS1="\[\e[0;32m\]┌──(\[\e[0;36m\]\u\[\e[0;32m\]@\[\e[0;35m\]$(_get_ip)\[\e[0;32m\])-[\[\e[0;33m\]\w\[\e[0;32m\]]$(_git_branch)\n\[\e[0;32m\]└─\$\[\e[0m\] "
+    PS1="\[\e[0;32m\]┌──(\[\e[0;36m\]\u\[\e[0;32m\]@\[\e[0;35m\]$(_get_ip)\[\e[0;32m\])-[\[\e[0;33m\]\w\[\e[0;32m\]]$(_git_branch)\n\[\e[0;32m\]└─\$\[\e[0m\] "
 }
-PROMPT_COMMAND='_update_branch'
+
+PROMPT_COMMAND=_update_branch
+
+# suggestion completion
+[[ $PS1 &&
+  ! ${BASH_COMPLETION_VERSINFO:-} &&
+  -f /usr/share/bash-completion/bash_completion ]] &&
+    . /usr/share/bash-completion/bash_completion
 
 # this is for yazi (file manager)
 function y() {

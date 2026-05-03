@@ -98,7 +98,18 @@ _update_branch() {
 }
 PROMPT_COMMAND='_update_branch'
 
+# ==============================================================
 
+# see open ports and processes that use them in Linux.
+ss -tulnp
+
+Opsi	Fungsi
+ss		Socket statistics
+-t		Tampilkan TCP
+-u		Tampilkan UDP
+-l		Hanya yang LISTEN
+-n		Jangan resolve nama. Tampilkan angka
+-p		Tampilkan nama proses dan PID
 
 # ==============================================================
 

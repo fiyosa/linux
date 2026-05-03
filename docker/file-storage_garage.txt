@@ -5,7 +5,7 @@ https://garagehq.deuxfleurs.fr/documentation/quick-start/
 sudo mkdir -p ~/docker/garage && sudo tee ~/docker/garage/garage.toml >/dev/null <<EOF
 metadata_dir = "/var/lib/garage/meta"
 data_dir = "/var/lib/garage/data"
-db_engine = "lmdb"
+db_engine = "sqlite"
 
 replication_factor = 1
 
@@ -34,30 +34,34 @@ EOF
 
 # ==========================================================
 
+docker network create garage
+
 docker run -d \
   --name garage \
   --restart unless-stopped \
+  --network garage \
   -p 3900:3900 -p 3901:3901 -p 3902:3902 -p 3903:3903 \
   -v ~/docker/garage/garage.toml:/etc/garage.toml \
   -v ~/docker/garage/meta:/var/lib/garage/meta \
   -v ~/docker/garage/data:/var/lib/garage/data \
-  dxflrs/garage:v1.2.0
+  dxflrs/garage:v2.2.0
 
 # ==========================================================
 # GUI garage
 # bcrypt-generator.com
 # use "\" before "$"
-# admin:admin
+# auth => admin:admin
 
 docker run -d \
 	--name garage-ui \
 	--restart unless-stopped \
+	--network garage \
 	-p 3909:3909 \
 	-v ~/docker/garage/garage.toml:/etc/garage.toml:ro \
-	-e API_BASE_URL="http://192.168.133.153:3903" \
-	-e S3_ENDPOINT_URL="http://192.168.133.153:3900" \
+	-e API_BASE_URL="http://garage:3903" \
+	-e S3_ENDPOINT_URL="http://garage:3900" \
 	-e AUTH_USER_PASS="admin:\$2a\$10\$xHYwOxuQXGj54IJnQT6uYOQc2EATDw7V2CGFirHmonNDwnsg8dRca" \
-	khairul169/garage-webui:latest
+	khairul169/garage-webui:1.1.0
 
 # ==========================================================
 
@@ -100,4 +104,4 @@ AWS_SECRET_ACCESS_KEY=ba6b0de7744848f7381a644fd04e4f5c37bd20f842e93093b51cbd90d4
 AWS_DEFAULT_REGION=local
 AWS_BUCKET=local-storage
 AWS_ENDPOINT=http://192.168.133.147:3900
-AWS_USE_PATH_STYLE_ENDPOINT=true	
+AWS_USE_PATH_STYLE_ENDPOINT=true
