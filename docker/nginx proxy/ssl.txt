@@ -1,0 +1,122 @@
+mkdir -p ~/docker/certbot/www ~/docker/certbot/conf
+
+docker stop nginx-proxy && docker rm nginx-proxy
+
+# Create container nginx
+docker run -d \
+  --name nginx-proxy \
+  --restart always \
+  -p 80:80 \
+  -p 443:443 \
+  -v ~/docker/nginx/conf.d:/etc/nginx/conf.d \
+  -v ~/docker/certbot/www:/var/www/certbot \
+  -v ~/docker/certbot/conf:/etc/letsencrypt \
+  --network proxy \
+  nginx:alpine
+
+## make sure file portfolio.conf still for "http"
+
+docker exec nginx-proxy nginx -s reload
+
+# Create ssl
+docker run --rm \
+  -v ~/docker/certbot/www:/var/www/certbot \
+  -v ~/docker/certbot/conf:/etc/letsencrypt \
+  certbot/certbot certonly --webroot \
+  --webroot-path=/var/www/certbot \
+  --register-unsafely-without-email \
+  --agree-tos \
+  -d portainer.fiyosa.me
+
+# if add subdomain
+docker run --rm \
+  -v ~/docker/certbot/www:/var/www/certbot \
+  -v ~/docker/certbot/conf:/etc/letsencrypt \
+  certbot/certbot certonly --webroot \
+  --webroot-path=/var/www/certbot \
+  --register-unsafely-without-email \
+  --agree-tos \
+  --expand \
+  -d fiyosa.me \
+  -d www.fiyosa.me \
+  -d garage.fiyosa.me \
+  -d s3.fiyosa.me \
+  -d postgresql.fiyosa.me \
+  -d memo.fiyosa.me \
+  -d status.fiyosa.me \
+  
+## add file portfolio_ssl.conf and delete file portfolio.conf
+
+docker exec nginx-proxy nginx -s reload
+
+# ========================================================
+
+# check status ssl
+
+docker run --rm \
+  -v ~/docker/certbot/conf:/etc/letsencrypt \
+  certbot/certbot certificates
+
+# ========================================================
+
+# Renew ssl
+
+# manual
+docker run --rm \
+  -v ~/docker/certbot/www:/var/www/certbot \
+  -v ~/docker/certbot/conf:/etc/letsencrypt \
+  certbot/certbot renew
+docker exec nginx-proxy nginx -s reload
+  
+# for cron (on monday at 03:00 with less 30 days)
+0 3 * * 1 docker run --rm -v ~/docker/certbot/www:/var/www/certbot -v ~/docker/certbot/conf:/etc/letsencrypt certbot/certbot renew --quiet && docker exec nginx-proxy nginx -s reload
+
+# ========================================================
+
+cat > portainer.conf << 'EOF'
+server {
+    listen 80;
+    server_name portainer.fiyosa.me;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        proxy_pass http://portainer:9000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+EOF
+
+# ========================================================
+
+cat > portainer.conf << 'EOF'
+server {
+    listen 80;
+    server_name portainer.fiyosa.me;
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+    return 301 https://$host$request_uri;
+}
+server {
+    listen 443 ssl;
+    server_name portainer.fiyosa.me;
+    ssl_certificate /etc/letsencrypt/live/fiyosa.me/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/fiyosa.me/privkey.pem;
+    location / {
+        proxy_pass http://portainer:9000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        # Wajib untuk console terminal (WebSocket)
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+}
+EOF

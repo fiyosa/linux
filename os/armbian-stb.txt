@@ -1,0 +1,43 @@
+# download file https://github.com/ophub/amlogic-s9xxx-armbian/releases/tag/Armbian_bookworm_arm64_server_2026.06
+Armbian_26.08.0_amlogic_s905x_bookworm_6.12.93_server_2026.06.16.img.gz
+
+# first step on boot stb
+
+# search file
+armbian_first_run.txt.template
+
+# edit file
+armbian_first_run.txt
+```
+	FR_general_delete_this_file_after_completion=1
+	FR_net_change_defaults=1
+	FR_net_ethernet_enabled=0
+	FR_net_wifi_enabled=1
+	FR_net_wifi_ssid='NamaWiFiKamu'
+	FR_net_wifi_key='PasswordWiFiKamu'
+```
+
+### ===============================================
+
+# credential
+
+Default username: root
+Default password: 1234
+Install command: armbian-install
+Update command: armbian-update
+
+### ===============================================
+
+# check list wifi connected
+nmcli -f NAME,AUTOCONNECT-PRIORITY,AUTOCONNECT connection show
+
+# add wifi
+nmcli device wifi connect "SSID_WIFI2" password "password2"
+nmcli device wifi connect "SSID_WIFI3" password "password3"
+
+# set priority (greater is priority)
+nmcli connection modify "SSID_WIFI1" connection.autoconnect-priority 100
+nmcli connection modify "SSID_WIFI2" connection.autoconnect-priority 50
+nmcli connection modify "SSID_WIFI3" connection.autoconnect-priority 10
+
+### ===============================================

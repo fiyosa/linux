@@ -1,10 +1,14 @@
 docker network create proxy
 
+# run 
 docker run -d \
   --name nginx-proxy \
   --restart always \
   -p 80:80 \
+  -p 443:443 \
   -v ~/docker/nginx/conf.d:/etc/nginx/conf.d \
+  -v ~/docker/certbot/www:/var/www/certbot \
+  -v ~/docker/certbot/conf:/etc/letsencrypt \
   --network proxy \
   nginx:alpine
   
@@ -30,13 +34,56 @@ docker exec nginx-proxy cat /etc/nginx/conf.d/dbgate.conf
 # logout
 http://logout@dbgate.fiyosa.me
   
-# =======================
+# ==============================================
+
+# portfolio.conf
+server {
+    listen 80;
+    server_name fiyosa.me www.fiyosa.me;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        proxy_pass http://portfolio:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+
+# portfolio_ssl.conf
+server {
+    listen 80;
+    server_name fiyosa.me www.fiyosa.me;
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+    return 301 https://$host$request_uri;
+}
+server {
+    listen 443 ssl;
+    server_name fiyosa.me www.fiyosa.me;
+    ssl_certificate /etc/letsencrypt/live/fiyosa.me/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/fiyosa.me/privkey.pem;
+    location / {
+        proxy_pass http://portfolio:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+
+# ==============================================
 
 # conf.d/portainer.conf
 
 server {
     listen 80;
     server_name portainer.fiyosa.me;
+	
+	location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
 
     location / {
         proxy_pass http://portainer:9000;
@@ -50,6 +97,10 @@ server {
 server {
     listen 80;
     server_name garage.fiyosa.me;
+	
+	location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
 
     location / {
         proxy_pass http://garage-ui:3909;

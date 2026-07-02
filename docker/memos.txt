@@ -1,0 +1,7 @@
+docker run -d \
+  --name memo \
+  --restart unless-stopped \
+  -p 5230:5230 \
+  -v ~/docker/memos:/var/opt/memos \
+  --network proxy \
+  neosmemo/memos:stable

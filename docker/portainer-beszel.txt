@@ -1,0 +1,28 @@
+# monitoring server with web
+https://beszel.dev/guide/hub-installation#docker-or-podman
+
+docker run -d \
+  --name beszel \
+  --restart=unless-stopped \
+  --network=proxy \
+  -v /root/docker/beszel:/beszel_data \
+  -e APP_URL=http://localhost:8090 \
+  -p 8090:8090 \
+  henrygd/beszel
+  
+# clicl "Add System" add:
+# name "FREE TEXT" & Host/IP "host.docker.internal"
+
+# copy "Public Key" & "Token"
+  
+docker run -d \
+  --name beszel-agent \
+  --network host \
+  --restart unless-stopped \
+  -v /var/run/docker.sock:/var/run/docker.sock:ro \
+  -v /root/docker/beszel-agent:/var/lib/beszel-agent \
+  -e LISTEN=45876 \
+  -e HUB_URL="http://localhost:8090" \
+  -e KEY="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOxnXJuTDh/Prgy/u6jVHODYgeQ+j5/1L9Ha0SzrqK8m" \
+  -e TOKEN="3e2301da-a267-4c46-a11f-0a4f214c37c2" \
+  henrygd/beszel-agent
