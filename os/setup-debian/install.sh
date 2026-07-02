@@ -196,16 +196,16 @@ fi
 # ----------------------------------------------------------------------------
 BTOP_ARCH="$(uname -m)"
 case "$BTOP_ARCH" in
-    x86_64)  BTOP_ASSET="btop-x86_64-linux-musl.tbz" ;;
-    aarch64) BTOP_ASSET="btop-aarch64-linux-musl.tbz" ;;
+    x86_64)  BTOP_ASSET="btop-x86_64-unknown-linux-musl.tar.gz" ;;
+    aarch64) BTOP_ASSET="btop-aarch64-unknown-linux-musl.tar.gz" ;;
     *)
         echo "Error: Unsupported architecture: $BTOP_ARCH"
         exit 1
         ;;
 esac
 
-curl -LO --output-dir "$INSTALL_TMP" "https://github.com/aristocratos/btop/releases/latest/download/$BTOP_ASSET"
-tar xf "$INSTALL_TMP/$BTOP_ASSET" -C "$INSTALL_TMP"
+curl -sSLo "$INSTALL_TMP/$BTOP_ASSET" "https://github.com/aristocratos/btop/releases/latest/download/$BTOP_ASSET"
+tar xzf "$INSTALL_TMP/$BTOP_ASSET" -C "$INSTALL_TMP"
 sudo mv "$INSTALL_TMP/btop/bin/btop" /usr/local/bin/
 echo "btop installed: $(btop --version)"
 # NOTE: extracted btop directory will be removed at end of script with $INSTALL_TMP cleanup.
