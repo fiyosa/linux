@@ -8,9 +8,15 @@ set -e
 
 # ----------------------------------------------------------------------------
 # Setup: Working directory for downloads
-# All download artifacts go to ~/TEMP_INSTALL for inspection if an error occurs.
+# All download artifacts go to /home/$USER/TEMP_INSTALL for inspection if an error occurs.
+# When run via sudo, use the invoking user's home (e.g. /home/fys) so artifacts
+# are accessible to the original user and not buried in /root.
 # ----------------------------------------------------------------------------
-INSTALL_TMP="$HOME/TEMP_INSTALL"
+if [ -n "$SUDO_USER" ]; then
+    INSTALL_TMP="/home/$SUDO_USER/TEMP_INSTALL"
+else
+    INSTALL_TMP="$HOME/TEMP_INSTALL"
+fi
 mkdir -p "$INSTALL_TMP"
 
 # ----------------------------------------------------------------------------
