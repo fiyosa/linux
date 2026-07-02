@@ -1,0 +1,38 @@
+format = """
+[┌──\\(](bold green)$username[@](bold green)$env_var[\\)-\\[](bold green)$directory[\\]](bold green)$git_branch$git_status
+[└─](bold green)$character"""
+
+[character]
+success_symbol = "[\\$](bold green)"
+error_symbol = "[\\$](bold green)"
+format = "$symbol "
+
+[username]
+show_always = true
+format = "[$user](bold cyan)"
+
+[env_var]
+variable = "STARSHIP_HOST"
+default = "localhost"
+format = "[$env_value](bold 208)"
+
+[directory]
+format = "[$path](bold yellow)"
+truncation_length = 0
+truncate_to_repo = false
+
+[git_branch]
+format = "[-\\(](bold green)[$branch](bold blue)"
+
+[git_status]
+format = "[$all_status](bold blue)[\\)](bold green)"
+conflicted = "|MERGE"
+modified = "|*"
+staged = "|*"
+untracked = ""
+deleted = ""
+renamed = ""
+stashed = ""
+ahead = ""
+behind = ""
+diverged = ""

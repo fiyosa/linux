@@ -146,51 +146,13 @@ else
     echo "starship init already present in $BASHRC"
 fi
 
-# Create starship config directory and default config.
+# Create starship config directory and download config from repo.
 STARSHIP_CONFIG_DIR="$HOME/.config"
 mkdir -p "$STARSHIP_CONFIG_DIR"
 STARSHIP_TOML="$STARSHIP_CONFIG_DIR/starship.toml"
 if [ ! -f "$STARSHIP_TOML" ]; then
-    cat > "$STARSHIP_TOML" <<'EOF'
-format = """
-[┌──╲](bold green)$username[@](bold green)$env_var[\\)─\\[](bold green)$directory(bold yellow)[╲]](bold green)$git_branch(bold blue)$git_status
-[└─](bold green)$character"""
-
-[character]
-success_symbol = "[\\$](bold green)"
-error_symbol = "[\\$](bold green)"
-format = "$symbol "
-
-[username]
-show_always = true
-format = "[$user](bold cyan)"
-
-[env_var]
-variable = "STARSHIP_HOST"
-default = "localhost"
-format = "[$env_value](bold 208)"
-
-[directory]
-format = "[$path](bold yellow)"
-truncation_length = 0
-truncate_to_repo = false
-
-[git_branch]
-format = "[-\\(](bold green)[$branch](bold blue)"
-
-[git_status]
-format = "[$all_status](bold blue)[\\)](bold green)"
-conflicted = "|MERGE"
-modified = "|*"
-staged = "|*"
-untracked = ""
-deleted = ""
-renamed = ""
-stashed = ""
-ahead = ""
-behind = ""
-diverged = ""
-EOF
+    curl -sSLo "$STARSHIP_TOML" \
+        "https://raw.githubusercontent.com/fiyosa/linux/refs/heads/master/os/setup-debian/assets/starship.toml"
     echo "starship config created at $STARSHIP_TOML"
 else
     echo "starship config already exists at $STARSHIP_TOML"
