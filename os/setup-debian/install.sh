@@ -57,7 +57,7 @@ esac
 
 curl -Lo "$INSTALL_TMP/yazi.zip" "https://github.com/sxyazi/yazi/releases/latest/download/$YAZI_ASSET"
 unzip -q "$INSTALL_TMP/yazi.zip" -d "$INSTALL_TMP/yazi-temp"
-sudo mv "$INSTALL_TMP/yazi-temp/"*"/{ya,yazi}" /usr/local/bin
+sudo find "$INSTALL_TMP/yazi-temp" -type f \( -name yazi -o -name ya \) -exec mv -t /usr/local/bin {} +
 yazi --version
 # NOTE: artifacts left in $INSTALL_TMP for manual inspection if needed.
 
