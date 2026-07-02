@@ -45,7 +45,7 @@ sudo apt update
 # Feature 3: Install Prerequisites
 # Installs curl and unzip required by later steps.
 # ----------------------------------------------------------------------------
-sudo apt install -y curl unzip htop bzip2
+sudo apt install -y curl unzip htop bzip2 git
 
 # ----------------------------------------------------------------------------
 # Feature 4: Install Yazi (File Manager)
