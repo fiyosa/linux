@@ -153,7 +153,7 @@ STARSHIP_TOML="$STARSHIP_CONFIG_DIR/starship.toml"
 if [ ! -f "$STARSHIP_TOML" ]; then
     cat > "$STARSHIP_TOML" <<'EOF'
 format = """
-[┌──╲](bold green)$username[@](bold green)$env_var[\\)─\\[](bold green)$directory[╲]](bold green)$git_branch$git_status
+[┌──╲](bold green)$username[@](bold green)$env_var[\\)─\\[](bold green)$directory(bold yellow)[╲]](bold green)$git_branch$git_status
 [└─](bold green)$character"""
 
 [character]
