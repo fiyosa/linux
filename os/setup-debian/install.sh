@@ -128,11 +128,11 @@ starship --version
 # Append starship init to ~/.bashrc (idempotent).
 STARSHIP_INIT_MARKER="# >>> starship init >>>"
 if ! grep -qF "$STARSHIP_INIT_MARKER" "$BASHRC" 2>/dev/null; then
-    cat >> "$BASHRC" <<'EOF'
+    cat >> "$BASHRC" <<EOF
 
 # >>> starship init >>>
-export STARSHIP_HOST="8.222.234.152"
-eval "$(starship init bash)"
+export STARSHIP_HOST="\$(hostname -I | awk '{print \$1}')"
+eval "\$(starship init bash)"
 # <<< starship init <<<
 EOF
     echo "starship init added to $BASHRC"
