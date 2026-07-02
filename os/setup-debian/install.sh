@@ -134,10 +134,11 @@ starship --version
 # Append starship init to ~/.bashrc (idempotent).
 STARSHIP_INIT_MARKER="# >>> starship init >>>"
 if ! grep -qF "$STARSHIP_INIT_MARKER" "$BASHRC" 2>/dev/null; then
+    STATIC_IP="$(hostname -I | awk '{print $1}')"
     cat >> "$BASHRC" <<EOF
 
 # >>> starship init >>>
-export STARSHIP_HOST="\$(hostname -I | awk '{print \$1}')"
+export STARSHIP_HOST="$STATIC_IP"
 eval "\$(starship init bash)"
 # <<< starship init <<<
 EOF
