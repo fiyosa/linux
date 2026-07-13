@@ -1,0 +1,12 @@
+# estimation 4 minutes
+docker run -d \
+  --name hermes-webui \
+  --restart=always \
+  -e HERMES_WEBUI_PASSWORD=your-strong-password \
+  -v ~/workspace:/workspace \
+  -e WANTED_UID=$(id -u) -e WANTED_GID=$(id -g) \
+  --add-host=host.docker.internal:host-gateway \
+  -v ~/.hermes:/home/hermeswebui/.hermes \
+  -e HERMES_WEBUI_STATE_DIR=/home/hermeswebui/.hermes/webui \
+  -p 127.0.0.1:8787:8787 \
+  ghcr.io/nesquena/hermes-webui:latest

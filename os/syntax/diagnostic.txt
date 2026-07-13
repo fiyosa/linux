@@ -17,12 +17,19 @@ df -i
 ps aux --sort=-%cpu | head -20
 ps aux --sort=-%mem | head -20
 
+# ================= NETWORK =================
+
+sudo ss -tulpn | grep :22
+sudo ss -tulpn
+curl ifconfig.me
+
+# show detail
+ps -p <PID> -f
 
 # ================= SERVICE & STATUS =================
 
 systemctl list-units --type=service
 systemctl --failed
-
 
 # ================= USER & AKSES =================
 
@@ -73,19 +80,9 @@ ls /etc/cron*
 ls -al /etc/cron*
 cat /etc/ld.so.preload
 
-
-# ================= NETWORK =================
-
-ss -tnp | grep :22
-ss -tulpn
-ss -	
-curl ifconfig.me
-
-
 # ================= CONTAINER =================
 
 docker ps
-
 
 # ================= HARDWARE =================
 

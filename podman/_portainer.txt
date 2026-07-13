@@ -1,0 +1,9 @@
+mkdir -p ~/podman/portainer
+
+podman run -d \
+--name portainer \
+--restart=always \
+-p 9000:9000 \
+-v /run/podman/podman.sock:/var/run/docker.sock \
+-v ~/podman/portainer:/data \
+portainer/portainer-ce:alpine

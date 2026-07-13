@@ -28,6 +28,12 @@ Update command: armbian-update
 
 ### ===============================================
 
+# disabled: Pesan Station is not found muncul terus karena driver melakukan pengecekan rutin setiap beberapa detik.
+
+dmesg -n 1
+
+### ===============================================
+
 # check list wifi connected
 nmcli -f NAME,AUTOCONNECT-PRIORITY,AUTOCONNECT connection show
 
@@ -39,5 +45,11 @@ nmcli device wifi connect "SSID_WIFI3" password "password3"
 nmcli connection modify "SSID_WIFI1" connection.autoconnect-priority 100
 nmcli connection modify "SSID_WIFI2" connection.autoconnect-priority 50
 nmcli connection modify "SSID_WIFI3" connection.autoconnect-priority 10
+
+# shortcut
+sudo nmcli connection add type wifi con-name "SSID_WIFI1" ssid "SSID_WIFI1" -- wifi-sec.key-mgmt wpa-psk wifi-sec.psk "password1" connection.autoconnect yes connection.autoconnect-priority 50
+
+# rename wifi
+sudo nmcli connection modify "netplan-wlan0-not_recommended" connection.id "not_recommended"
 
 ### ===============================================
