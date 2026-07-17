@@ -1,0 +1,6 @@
+https://github.com/rgwood/systemctl-tui
+
+
+curl https://raw.githubusercontent.com/rgwood/systemctl-tui/master/install.sh | bash
+
+sudo ln -s ~/.local/bin/systemctl-tui /usr/local/bin/systemctl-tui

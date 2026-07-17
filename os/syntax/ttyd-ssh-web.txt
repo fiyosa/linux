@@ -1,0 +1,27 @@
+
+sudo apt install ttyd
+
+# === START ===
+sudo tee /etc/systemd/system/ttyd.service << 'EOF'
+[Unit]
+Description=ttyd Web Terminal
+After=network.target
+
+[Service]
+Type=simple
+User=fys
+WorkingDirectory=/home/fys
+ExecStart=/usr/bin/ttyd -W -c admin:fiyosafiyosa -p 7682 -T xterm-256color bash -l
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+# === STOP ===
+
+sudo systemctl daemon-reload
+sudo systemctl restart ttyd.service
+sudo systemctl status ttyd.service
+
+https://localhost:7682

@@ -1,0 +1,9 @@
+Endpoint & key	=> baseURL & create api key for local AI
+Providers		=> access api key on official provider AI
+Combos			=> create naming model
+Usage			=> monitoring request AI
+
+curl https://localhost:20128/v1/chat/completions \
+  -H "Authorization: Bearer sk-a7bdXXXXXXXXXXXX-XXXXXX-XXX5b5b8" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"hermes","messages":[{"role":"user","content":"hello, who is it?"}]}'

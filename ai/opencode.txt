@@ -1,0 +1,36 @@
+# location setup global
+# ~/.config\opencode\opencode.jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "edit": "ask",
+    "read": {
+      "*": "allow",
+      ".env": "deny"
+    }
+  },
+  "instructions": [
+    "JANGAN baca file apapun yang mengandung 'env' di nama file atau path-nya.",
+    "GUNAKAN bahasa inggris saat menulis comment pada file."
+  ],
+  "provider": {
+    "9router": {
+      "api": "openapi",
+      "name": "9router",
+      "options": {
+        "baseURL": "http://localhost:20128/v1",
+        "apiKey": "your-api-key"
+      },
+      "models": {
+        "vscode": {
+          "id": "vscode",
+          "tool_call": true,
+          "limit": {
+            "context": 128000,
+            "output": 8192
+          }
+        }
+      }
+    }
+  }
+}

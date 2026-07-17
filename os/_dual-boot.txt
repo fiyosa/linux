@@ -1,99 +1,46 @@
-=============================================
-# fix dual boot where boot windows not found
+## not entry menu grub
 
-vim /etc/default/grub
-GRUB_DISABLE_OS_PROBER=false  # uncomment then exit
-os-prober
-pacman -S fuse3 # if os-prober not detected boot windows, retry os-prober
-grub-mkconfig -o /boot/grub/grub.cfg
-
-# optional 
-vim /etc/default/grub
-GRUB_DEFAULT=2 # boot priority to windows
+1) sudo vim /etc/default/grub
 GRUB_TIMEOUT=10
+GRUB_TIMEOUT_STYLE=menu
+#GRUB_HIDDEN_TIMEOUT
+2) sudo update-grub
+3) restart laptop
 
-=============================================
-# (MBR) remove dual boot, just windows!
+## windows menu grup not found
 
-1) delete partition
-2) delete grub
+1) sudo vim /etc/default/grub
+GRUB_DISABLE_OS_PROBER=false
+2) sudo os-prober
+3) sudo update-grub
+4) restart laptop
 
-# mbr (bios)
-# delete partition linux on disk management # "REQUIRED"
-# open cmd (admin)
-bootsect /nt60 C: /mbr  # bootsect /nt60 <drive name> /mbr
+# ======================================================
 
-# check (REQUIRED)
-diskpart
-list disk
-select disk X # change 'X' with disk boot
-list partition
+## (MBR) remove dual boot, just windows!
 
-# lakukan di setiap partisi cuma hanya boleh windows saja yg "Active: Yes"
-select partition X # change 'X' with partition windows
-detail partition
+1) Insert os windows
+2) Open app "Create and format hard disk partitions" and delete valume linux (Unallocated)
+3) open cmd (administrator) and run:
+bootsect /nt60 C: /mbr
+4) restart laptop
+5) Open app "Create and format hard disk partitions", right click partition C, select "Extend Volume", ikuti wizard sampai selesai (ambil semua ruang Unallocated).
 
-# Example from "detail partition"
-----------------------↓ Start ↓----------------------
+# ======================================================
 
-DISKPART> detail partition
+## (GPT) remove dual boot, just windows!
 
-Partition 1
-Type  : 07
-Hidden: No
-Active: Yes
-Offset in Bytes: 1048576
-
-  Volume ###  Ltr  Label        Fs     Type        Size     Status     Info
-  ----------  ---  -----------  -----  ----------  -------  ---------  --------
-* Volume 4     C   windows ssd  NTFS   Partition    238 GB  Healthy    System
-
-----------------------↑ End ↑----------------------
-
-----------------------↓ Start ↓----------------------
-# OPTIONAL
-
-# jika ada lebih "Active: Yes" dan bukan dari parition windows
-select partition 2  (Pilih partisi non-Windows yang Active)
-inactive           (Matikan status Active)
-# try again check detail partition
-----------------------↑ End ↑----------------------
-
-# last check (REQUIRED)
-dir C:\bootmgr
-dir C:\Windows\System32\winload.exe
-bcdedit /enum # Pastikan hanya ada entri Windows Boot Manager. 
-bcdedit /v # Pastikan hanya ada entri Windows Boot Manager. 
-
-=============================================
-# (GPT) remove dual boot, just windows!
-
-1) delete partition
-2) delete grub
-
-# gpt (UEFI)
-# delete partition linux on disk management # "REQUIRED"
-# open cmd (admin)
-diskpart
-list disk
-sel disk X # change X with where drive boot
-list vol # see all partition (volumes) on disk
-sel vol X # change X with EFI volume (FAT32)
-assign letter=Z:
-exit
-Z:
-dir
-cd EFI
-ls
-rmdir /S ubuntu # change 'ubuntu' with os that you want to delete
-# type "y" if confirm delete
-remove letter=Z
-
-# last action
-bcdedit /enum firmware
-bcdedit /delete {identifier} # ganti "{identifier}" dan cari entri "Arch Linux" atau "GRUB", lalu hapus
-
-# last check (REQUIRED)
-bcdedit /enum # Pastikan hanya ada entri Windows Boot Manager.
-
-=============================================
+1) Insert os windows
+2) run "win + r" then type "msconfig", select tab 'boot' then delete os linux and click "apply"
+3) Open app "Create and format hard disk partitions" and delete valume linux (Unallocated)
+4.1) Open app "Create and format hard disk partitions"
+4.2) select volume 'efi' and right click then select "Change Drive Letter and Paths"
+4.3) click 'Add' and select 'S' (example) then 'Ok'
+4.4) open 'Windows Explorer' entry drive 'S:' 
+4.5) delete folder linux (don't delete folder Microsoft & Boot)
+4.6) close 'Windows Explorer'
+4.7) Open app "Create and format hard disk partitions" again
+4.8) select volume 'efi' 'S:' and right click then select "Change Drive Letter and Paths" again
+4.9) click 'Remove' then 'Ok'
+5) restart laptop
+6) Open app "Create and format hard disk partitions", right click partition C, select "Extend Volume", ikuti wizard sampai selesai (ambil semua ruang Unallocated).

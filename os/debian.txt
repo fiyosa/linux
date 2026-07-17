@@ -34,6 +34,14 @@ PATH=$PATH:usr/bin:
 
 # ==============================================================
 
+sudo vim /etc/default/grub
+
+GRUB_TIMEOUT=0
+
+sudo update-grub
+
+# ==============================================================
+
 # change repo mirrors to singapore
 
 vim /etc/apt/sources.list

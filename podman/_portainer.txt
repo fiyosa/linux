@@ -1,9 +1,92 @@
+sudo vim /etc/containers/registries.conf
+
+unqualified-search-registries = ["docker.io"]
+
+# ==============================================
+
 mkdir -p ~/podman/portainer
 
-podman run -d \
+sudo podman run -d \
 --name portainer \
 --restart=always \
 -p 9000:9000 \
 -v /run/podman/podman.sock:/var/run/docker.sock \
 -v ~/podman/portainer:/data \
 portainer/portainer-ce:alpine
+
+# ==============================================
+
+# sudo ds
+
+sudo vim /usr/local/bin/ds
+
+#!/bin/bash
+podman stats --no-stream
+
+sudo chmod +x /usr/local/bin/ds
+sudo ds
+
+# ==============================================
+
+# enable podman user (rootless)
+
+systemctl --user enable --now podman.socket
+
+systemctl --user status podman.socket
+
+sudo loginctl enable-linger $USER
+
+loginctl show-user $USER | grep Linger
+
+# ==============================================
+
+# if error on podman user =>
+
+$ podman ps
+Error: command required for rootless mode with multiple IDs: exec: "newuidmap": executable file not found in $PATH
+
+sudo apt install -y uidmap
+
+# if error slirp4netns on podman user =>
+
+Error: could not find slirp4netns, the network namespace can't be configured: exec: "slirp4netns": executable file not found in $PATH
+
+sudo apt install -y slirp4netns
+
+# ==============================================
+
+# install portainer_agent for rootless
+
+mkdir -p ~/.local/share/containers/storage/volumes
+
+podman run -d \
+-p 9001:9001 \
+--name portainer_agent \
+--restart=always \
+--privileged \
+-v /run/user/1000/podman/podman.sock:/var/run/docker.sock \
+-v ~/.local/share/containers/storage/volumes:/var/lib/docker/volumes \
+docker.io/portainer/agent:alpine
+
+# Cek IP gateway network podman user
+podman network inspect podman | grep gateway
+
+# Environment address:
+10.88.0.1:9001
+
+# ==============================================
+
+# create systemd user service portainer_agent
+
+# Generate service untuk portainer_agent
+podman generate systemd --name portainer_agent --files --new
+
+# Pindahkan ke direktori systemd user
+mkdir -p ~/.config/systemd/user/
+mv container-portainer_agent.service ~/.config/systemd/user/
+
+# Aktifkan
+systemctl --user daemon-reload
+systemctl --user enable container-portainer_agent.service
+systemctl --user start container-portainer_agent.service
+systemctl --user status container-portainer_agent.service
