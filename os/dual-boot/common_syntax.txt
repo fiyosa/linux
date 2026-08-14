@@ -1,0 +1,3 @@
+# show report hardware & software
+sudo apt install inxi
+inxi -Fxxxz

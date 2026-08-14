@@ -1,0 +1,13 @@
+# search UUID on partition data windows
+sudo lsblk -f
+
+# edit data mount
+sudo vim /etc/fstab
+# edit file: edit UUID_DATA1 to UUID from 'sudo lsblk -f' =>
+UUID=UUID_DATA1 /mnt/data1 ntfs-3g defaults,uid=1000,gid=1000,umask=022 0 0
+UUID=UUID_DATA2 /mnt/data2 ntfs-3g defaults,uid=1000,gid=1000,umask=022 0 0
+
+# save mount 
+sudo mount -a
+
+# restart laptop or direct check on file explorer

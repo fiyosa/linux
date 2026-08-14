@@ -1,0 +1,35 @@
+- shrink volume on "Disk Management" with '512' (500MB) 'unallocated'
+
+# ========================================
+
+- open cmd with administrator
+
+- diskpart
+
+# search disk ssd / hdd
+- list disk
+
+# assumtion disk ssd on '0'
+- sel disk 0
+
+- list part
+
+- create partition efi
+
+- format quick fs = fat32
+
+- assign letter = p
+
+- list volume
+
+- list partition
+
+- exit
+
+- bcdboot c:\windows /s p: /f UEFI
+
+- exit (close cmd)
+
+# ========================================
+
+- restart laptop

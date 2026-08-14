@@ -1,0 +1,63 @@
+=========================================
+CEK DRIVER DAN HARDWARE LAPTOP
+[COPY DAN JALANKAN SATU PER SATU DI TERMINAL]
+=========================================
+
+1) INFO SISTEM
+uname -a
+lsb_release -a
+
+2) DRIVER GPU NVIDIA
+nvidia-smi
+[jika "command not found": driver proprietary Nvidia belum terpasang, buka Driver Manager dan install driver Nvidia]
+
+3) SEMUA GPU TERDETEKSI
+lspci | grep -i vga
+lspci | grep -i 3d
+
+4) DRIVER KERNEL SETIAP DEVICE PCI
+lspci -k
+
+5) OPENGL VERSION
+glxinfo | grep "OpenGL version"
+glxinfo | grep "OpenGL renderer"
+[jika "command not found": jalankan => sudo apt install mesa-utils]
+
+6) VULKAN SUPPORT
+vulkaninfo --summary
+[jika "command not found": jalankan => sudo apt install vulkan-tools]
+
+7) STATUS WIFI DAN NETWORK
+nmcli device status
+
+8) BLUETOOTH
+bluetoothctl show
+hciconfig -a
+dmesg | grep -i bluetooth
+[jika "command not found": jalankan sudo apt install bluez]
+
+9) AUDIO DEVICE
+aplay -l
+[jika "command not found": jalankan sudo apt install alsa-utils]
+
+pactl info
+[cek baris "Server Name" untuk lihat PipeWire atau PulseAudio yang aktif]
+
+pipewire --version
+[jika "command not found": PipeWire belum terpasang, cek systemctl --user status pipewire]
+
+# test speaker
+speaker-test -c 2 -t wav
+
+10) SEMUA HARDWARE TERDETEKSI
+sudo lshw -short
+[jika "command not found": jalankan sudo apt install lshw]
+
+11) ERROR DI KERNEL LOG
+dmesg | grep -i error | tail -20
+
+=========================================
+CATATAN
+=========================================
+Jalankan perintah satu per satu dari atas ke bawah.
+Cek hasil masing-masing sebelum lanjut ke perintah berikutnya.

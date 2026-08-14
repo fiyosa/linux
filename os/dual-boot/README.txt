@@ -1,4 +1,4 @@
-## not entry menu grub
+## not entry menu grub =>
 
 1) sudo vim /etc/default/grub
 GRUB_TIMEOUT=10
@@ -7,7 +7,7 @@ GRUB_TIMEOUT_STYLE=menu
 2) sudo update-grub
 3) restart laptop
 
-## windows menu grup not found
+## windows menu grup not found =>
 
 1) sudo vim /etc/default/grub
 GRUB_DISABLE_OS_PROBER=false

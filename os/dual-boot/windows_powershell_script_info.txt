@@ -1,0 +1,41 @@
+open powershell
+
+# =============================================================
+
+Write-Output "===== SYSTEM ====="
+Get-CimInstance Win32_ComputerSystem | Select-Object Manufacturer, Model, SystemType
+
+Write-Output "`n===== BIOS ====="
+Get-CimInstance Win32_BIOS | Select-Object Manufacturer, SMBIOSBIOSVersion, ReleaseDate, Name
+
+Write-Output "`n===== CPU ====="
+Get-CimInstance Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors, MaxClockSpeed | Format-List
+
+Write-Output "`n===== RAM (TOTAL) ====="
+$totalRAM = (Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB
+Write-Output "Total RAM: $([math]::Round($totalRAM,2)) GB"
+
+Write-Output "`n===== RAM (DETAIL PER SLOT) ====="
+Get-CimInstance Win32_PhysicalMemory | Select-Object Manufacturer, @{Name="CapacityGB";Expression={[math]::Round($_.Capacity/1GB,2)}}, Speed, PartNumber, DeviceLocator | Format-List
+
+Write-Output "`n===== GPU ====="
+Get-CimInstance Win32_VideoController | Select-Object Name, DriverVersion | Format-List
+
+Write-Output "`n===== DISK ====="
+Get-Disk | Format-Table Number, FriendlyName, PartitionStyle, @{Name="SizeGB";Expression={[math]::Round($_.Size/1GB,2)}} -AutoSize
+
+Write-Output "`n===== PARTITIONS ====="
+Get-Volume | Where-Object {$_.DriveLetter} | Format-Table DriveLetter, FileSystemLabel, FileSystem, @{Name="SizeGB";Expression={[math]::Round($_.Size/1GB,2)}}, @{Name="FreeGB";Expression={[math]::Round($_.SizeRemaining/1GB,2)}} -AutoSize
+
+Write-Output "`n===== NETWORK ====="
+Get-CimInstance Win32_NetworkAdapter | Where-Object {$_.NetEnabled -eq $true} | Select-Object Name, Manufacturer, MACAddress
+Get-PnpDevice | Where-Object {$_.FriendlyName -like "*Wireless*" -or $_.FriendlyName -like "*WiFi*" -or $_.FriendlyName -like "*WLAN*"} | Select-Object FriendlyName, InstanceId, Status
+
+Write-Output "`n===== AUDIO ====="
+Get-CimInstance Win32_SoundDevice | Select-Object Name, Manufacturer
+
+Write-Output "`n===== USB DEVICES ====="
+Get-PnpDevice -Class USB | Where-Object {$_.Status -eq "OK"} | Select-Object FriendlyName -Unique | Format-Table -AutoSize
+
+Write-Output "`n===== OS ====="
+Get-CimInstance Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version
