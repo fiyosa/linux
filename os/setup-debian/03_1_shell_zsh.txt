@@ -1,0 +1,117 @@
+# install packages mandatory
+sudo apt install zsh fzf
+
+
+# install Zinit (type 'y' if show confirm)
+curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh | bash
+
+
+# edit file ~/.zshrc then paste on script bellow
+vim ~/.zshrc
+# see below
+
+
+# change shell to zsh
+chsh -s /usr/bin/zsh
+
+
+# reload shell
+exec zsh
+
+
+# check delay on shell zsh
+zinit times
+
+
+# check history commands
+history | tail -20
+
+
+## fzf hotkey
+# ctrl+r show history commands
+# ctrl+t show file directory currently
+# ** then Tab for completions all file in this directory
+
+
+# === START "~/.zshrc" ====================================================
+tee -a ~/.zshrc << 'EOF'
+# ============================================
+# Plugin Zinit
+# ============================================
+zinit ice wait lucid
+zinit light zsh-users/zsh-autosuggestions
+
+zinit ice wait lucid
+zinit light zsh-users/zsh-completions
+
+zinit ice wait lucid
+zinit light zsh-users/zsh-syntax-highlighting
+
+# ============================================
+# Completion system
+# ============================================
+autoload -Uz compinit && compinit
+
+# ============================================
+# Key bindings
+# ============================================
+bindkey '^[[C' forward-word         # Ctrl+Right
+bindkey '^[[D' backward-word        # Ctrl+Left
+bindkey '^[OC' forward-char         # Right
+bindkey '^[OD' backward-char        # left
+bindkey '^[[1~' beginning-of-line   # Home
+bindkey '^[[4~' end-of-line         # End
+
+# ============================================
+# History configuration
+# ============================================
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt APPEND_HISTORY
+
+# ============================================
+# fzf integrasi
+# ============================================
+source <(fzf --zsh)
+# ctrl+r show history commands
+# ctrl+t show file directory currently
+# ** then Tab for completions all file in this directory
+
+# ============================================
+# Starship prompt
+# ============================================
+export STARSHIP_HOST="192.168.174.128"
+eval "$(starship init zsh)"
+
+# ============================================
+# Yazi file manager, tff = 49 (ttf-jetbrains-mono-nerd)
+# ============================================
+function y() {
+    local tmp cwd
+    tmp=$(mktemp -t "yazi-cwd.XXXXXX") || return 1
+    yazi "$@" --cwd-file="$tmp"
+    if cwd=$(cat -- "$tmp" 2>/dev/null) && [[ -n "$cwd" && "$cwd" != "$PWD" ]]; then
+        cd -- "$cwd" || echo "Failed to change directory" >&2
+    fi
+    rm -f -- "$tmp"
+}
+
+# ============================================
+# Add PATH
+# check duplicate => echo $PATH | tr ':' '\n' | sort | uniq -d
+# ============================================
+export PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin
+typeset -U path
+
+# ============================================
+# Alias
+# ============================================
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias c='clear'
+alias ll='ls -la'
+EOF
+# === STOP ================================================================

@@ -1,0 +1,10 @@
+sudo pacman -S --needed base-devel git
+
+mkdir Downloads && cd Downloads
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+
+# if error abort just re-run => makepkg -si
+
+yay --version

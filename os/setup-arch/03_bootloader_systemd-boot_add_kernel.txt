@@ -1,0 +1,56 @@
+# => ADD KERNEL LTS <=
+
+sudo pacman -S linux-lts linux-lts-headers
+
+ls -la /boot/EFI/Linux/
+
+sudo vim /etc/mkinitcpio.d/linux-lts.preset
+## === start
+#default_image="/boot/initramfs-linux-lts.img"
+default_uki="/boot/EFI/Linux/arch-linux-lts.efi"
+default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
+## === stop
+
+sudo mkinitcpio -p linux-lts
+
+ls -la /boot/EFI/Linux/
+
+sudo bootctl update
+
+bootctl list
+
+sudo reboot
+
+# ============================================
+
+# => ADD KERNEL LTS <=
+
+sudo pacman -S linux linux-headers
+
+sudo vim /etc/mkinitcpio.d/linux.preset
+## === start
+#default_image="/boot/initramfs-linux.img"
+default_uki="/boot/EFI/Linux/arch-linux.efi"
+default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
+## === stop
+
+sudo mkinitcpio -p linux
+
+ls -la /boot/EFI/Linux/
+
+sudo bootctl update
+
+bootctl list
+
+sudo reboot
+
+# ============================================
+
+# => SET DEFAULT KERNEL <=
+
+sudo vim /boot/loader/loader.conf
+# === start
+timeout 3
+#default arch-linux.efi
+default arch-linux-lts.efi
+# === stop

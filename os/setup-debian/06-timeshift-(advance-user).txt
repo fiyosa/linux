@@ -1,0 +1,59 @@
+sudo apt install timeshift
+
+
+sudo cat /etc/timeshift/timeshift.json
+{
+  "backup_device_uuid" : "d8590e7e-c8b7-4e4f-968d-74ee073df6ed",
+  "parent_device_uuid" : "",
+  "do_first_run" : "false",
+  "btrfs_mode" : "false",
+  "include_btrfs_home_for_backup" : "false",
+  "include_btrfs_home_for_restore" : "false",
+  "stop_cron_emails" : "false",
+  "schedule_monthly" : "false",
+  "schedule_weekly" : "false",
+  "schedule_daily" : "false",
+  "schedule_hourly" : "false",
+  "schedule_boot" : "false",
+  "count_monthly" : "2",
+  "count_weekly" : "3",
+  "count_daily" : "5",
+  "count_hourly" : "6",
+  "count_boot" : "5",
+  "date_format" : "%Y-%m-%d %H:%M:%S",
+  "exclude" : [
+    "/home/fys/**",
+    "/root/**"
+    "/var/log/**",
+    "/var/cache/**",
+    "/var/tmp/**",
+    "/var/lib/containers/**",
+	"/media/**",
+    "/mnt/**"
+  ],
+  "exclude-apps" : []
+}
+
+
+# show list snapshot
+sudo timeshift --list
+
+
+# show disk usage
+sudo du -sh /timeshift/snapshots/* 2>/dev/null
+sudo du -h / --max-depth=2 2>/dev/null | sort -rh | head -20
+sudo du -h /usr/share --max-depth=1 2>/dev/null | sort -rh | head -10
+sudo du -h /usr/lib --max-depth=1 2>/dev/null | sort -rh | head -10
+
+
+# create snapshot
+sudo timeshift --create --comments "snapshot pertama"
+
+
+# show progress creating snapshot
+sudo watch -n 2 'du -sh /timeshift/snapshots/*'
+
+
+# uninstall timeshift
+sudo apt purge timeshift
+sudo apt autoremove

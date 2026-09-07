@@ -1,0 +1,51 @@
+# ADD KENEL LINUX TO BOOTLOADER
+
+# for kernel mainline
+sudo pacman -S linux linux-headers
+# for kenel lts
+sudo pacman -S linux-lts linux-lts-headers
+
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+
+sudo vim /etc/default/grub
+## === start
+GRUB_DISABLE_OS_PROBER=false
+## === stop
+
+sudo pacman -S os-prober
+
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+
+sudo reboot
+
+# ==============================================
+
+# SET DEFAULT BOOT PRIORITY
+
+sudo vim /etc/default/grub
+## === start
+#GRUB_DEFAULT=0 # kernel mainline
+#GRUB_DEFAULT="Arch Linux" # kernel mainline
+#GRUB_DEFAULT="Advanced options for Arch Linux>Arch Linux, with Linux linux" # kernel mainline
+GRUB_DEFAULT="Advanced options for Arch Linux>Arch Linux, with Linux linux-lts"
+## === stop
+
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+
+sudo reboot
+
+# ==============================================
+
+# SHOW LIST BOOT
+
+# full detail boot
+sudo grep -A1 "menuentry\|submenu" /boot/grub/grub.cfg | grep -E "menuentry|submenu"
+
+# full detail boot readable
+sudo awk -F\' '/menuentry |submenu / {print $2}' /boot/grub/grub.cfg
+
+# check boot selection
+cat /etc/default/grub | grep GRUB_DEFAULT
+
+# check boot active
+grep "set default" /boot/grub/grub.cfg

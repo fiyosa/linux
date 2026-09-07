@@ -1,0 +1,9 @@
+sudo apt install pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber
+sudo reboot
+
+systemctl --user status pipewire pipewire-pulse wireplumber
+pactl info
+
+sudo apt remove --purge pulseaudio
+sudo apt autoremove
+sudo reboot

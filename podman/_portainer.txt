@@ -1,6 +1,11 @@
 sudo vim /etc/containers/registries.conf
-
+# add
 unqualified-search-registries = ["docker.io"]
+
+# if Error: statfs /run/podman/podman.sock: no such file or directory
+ls -la /run/podman/podman.sock
+sudo systemctl enable --now podman.socket
+sudo systemctl status podman.socket
 
 # ==============================================
 

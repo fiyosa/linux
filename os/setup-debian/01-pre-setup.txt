@@ -1,0 +1,27 @@
+# checksum with windows powershell
+Get-FileHash ./lmde-6-cinnamon-64bit.iso -Algorithm SHA256
+
+
+# fix error while running "sudo apt update"
+sudo rm /etc/apt/sources.list.d/debian-live-media.list
+
+
+# fix error while running "sudo apt update"
+sudo vim /etc/apt/sources.list
+## === START
+#deb [trusted=yes] file:/run/live/medium trixie main non-free-firmware
+## === STOP
+
+
+# change password with minimum length 3
+sudo vim /etc/pam.d/common-password
+## === START
+password [success=1 default=ignore] pam_unix.so obscure yescrypt minlen=3
+## === STOP
+
+
+# install gui screensaver
+## check package
+dpkg -l | grep -iE "screensaver|xscreensaver"
+sudo apt install xfce4-screensaver
+Setting -> Power Manager -> Screensaver Management

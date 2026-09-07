@@ -11,6 +11,8 @@
     "sleistner.vscode-fileutils",
     "saoudrizwan.claude-dev",
     "vasubasraj.flashpost",
-    "echoapi.echoapi-for-vscode"
+    "echoapi.echoapi-for-vscode",
+	"markshawn2020.better-copy-path-with-lines",
+	"shd101wyy.markdown-preview-enhanced"
   ]
 }

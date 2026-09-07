@@ -1,0 +1,7 @@
+sudo apt install -y command-not-found
+sudo update-command-not-found
+
+vim .zshrc
+# === START => .zshrc
+[ -f /etc/zsh_command_not_found ] && source /etc/zsh_command_not_found
+# === STOP

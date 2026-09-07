@@ -1,3 +1,21 @@
+sudo apt install starship
+
+
+# Buat file config
+mkdir -p ~/.config
+vim ~/.config/starship.toml
+# copy&paste script below
+
+
+echo 'export STARSHIP_HOST="8.222.234.152"' >> ~/.zshrc
+echo 'eval "$(starship init bash)"' >> ~/.zshrc
+
+
+source ~/.zshrc
+
+
+# =======================================================================
+tee ~/.config/starship.toml << 'EOF'
 format = """
 [┌──\\(](bold green)$username[@](bold green)$env_var[\\)-\\[](bold green)$directory[\\]](bold green)$git_branch$git_status
 [└─](bold green)$character"""
@@ -36,3 +54,5 @@ stashed = ""
 ahead = ""
 behind = ""
 diverged = ""
+EOF
+# =======================================================================

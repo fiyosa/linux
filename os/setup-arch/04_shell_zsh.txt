@@ -1,0 +1,92 @@
+
+# install packages mandatory
+sudo pacman -S zsh fzf
+
+# change shell to zsh
+chsh -s /usr/bin/zsh
+
+# install Zinit (type 'y' if show confirm)
+curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh | bash
+
+# edit file ~/.zshrc then paste on script bellow
+vim ~/.zshrc
+
+# reload shell
+exec zsh
+
+# check delay on shell zsh
+zinit times
+
+# check history commands
+history | tail -20
+
+## fzf hotkey
+# ctrl+r show history commands
+# ctrl+t show file directory currently
+# ** then Tab for completions all file in this directory
+
+
+# === START "~/.zshrc" ====================================================
+cat << EOF > ~/.zshrc
+# ============================================
+# Plugin Zinit
+# ============================================
+zinit ice wait lucid
+zinit light zsh-users/zsh-autosuggestions
+
+zinit ice wait lucid
+zinit light zsh-users/zsh-completions
+
+zinit ice wait lucid
+zinit light zsh-users/zsh-syntax-highlighting
+
+# ============================================
+# Completion system
+# ============================================
+autoload -Uz compinit && compinit
+
+# ============================================
+# History configuration
+# ============================================
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt APPEND_HISTORY
+
+# ============================================
+# fzf integrasi
+# ============================================
+source <(fzf --zsh)
+
+# ============================================
+# Starship prompt
+# ============================================
+export STARSHIP_HOST="192.168.174.128"
+eval "$(starship init zsh)"
+
+# ============================================
+# Yazi file manager, tff = 49 (ttf-jetbrains-mono-nerd)
+# ============================================
+function y() {
+    local tmp cwd
+    tmp=$(mktemp -t "yazi-cwd.XXXXXX") || return 1
+    yazi "$@" --cwd-file="$tmp"
+    if cwd=$(cat -- "$tmp" 2>/dev/null) && [[ -n "$cwd" && "$cwd" != "$PWD" ]]; then
+        cd -- "$cwd" || echo "Failed to change directory" >&2
+    fi
+    rm -f -- "$tmp"
+}
+
+# ============================================
+# Alias
+# ============================================
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias c='clear'
+alias ll='ls -la'
+
+alias srl='sudo snapper -c root list'
+EOF
+# === STOP ================================================================

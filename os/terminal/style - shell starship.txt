@@ -13,7 +13,7 @@ echo 'eval "$(starship init bash)"' >> ~/.bashrc
 
 source ~/.bashrc
 
-rm -rf startship*.tar.gz
+rm -rf starship*.tar.gz
 
 # =======================================================================
 format = """

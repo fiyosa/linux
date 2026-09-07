@@ -1,0 +1,46 @@
+# https://lindevs.com/install-yazi-on-ubuntu
+curl -Lo yazi.zip https://github.com/sxyazi/yazi/releases/latest/download/yazi-x86_64-unknown-linux-musl.zip
+
+unzip -q yazi.zip -d yazi-temp
+
+sudo mv yazi-temp/*/{ya,yazi} /usr/local/bin
+
+yazi --version
+
+rm -rf yazi-temp yazi.zip
+
+# To delete Yazi, eliminate the associated file:
+sudo rm -rf /usr/local/bin/{ya,yazi}
+
+=============================================================
+
+# https://yazi-rs.github.io/docs/configuration/overview/
+
+# 'q' quit directory active
+# 'shift+q' quit last directory
+
+vim ~/.bashrc
+
+function y() {
+    local tmp cwd    
+    tmp=$(mktemp -t "yazi-cwd.XXXXXX") || return 1
+    yazi "$@" --cwd-file="$tmp"
+    if cwd=$(cat -- "$tmp" 2>/dev/null) && [[ -n "$cwd" && "$cwd" != "$PWD" ]]; then
+        cd -- "$cwd" || echo "Failed to change directory" >&2
+    fi    
+    rm -f -- "$tmp"
+}
+
+source ~/.bashrc
+
+=============================================================
+
+mkdir -p ~/.config/yazi
+
+
+tee ~/.config/yazi/yazi.toml > /dev/null << 'EOF'
+[mgr]
+show_hidden = true
+EOF
+
+=============================================================

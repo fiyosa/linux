@@ -1,0 +1,27 @@
+# swapfile (use swapfile then write storage increase) for low cpu
+
+sudo fallocate -l 4G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+
+
+# =======================================
+
+# zram (use zram then load cpu increase) for low storage
+
+sudo apt install zram-tools
+
+sudo vim /etc/default/zramswap
+## === START => etc/default/zramswap
+ALGO=zstd
+PERCENT=50
+#SIZE=
+PRIORITY=100
+## === STOP
+
+sudo systemctl daemon-reload
+sudo systemctl start /dev/zram0
+swapon --show

@@ -1,0 +1,14 @@
+# open cmd & run browser edge for debugging
+"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --remote-debugging-port=9222 --user-data-dir="%USERPROFILE%\DebugBrowserEdge"
+
+# open gitbash & run browser edge for debugging
+"/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe" --remote-debugging-port=9222 --user-data-dir="$USERPROFILE/DebugBrowserEdge" &
+
+# check port 9222
+netstat -ano | findstr 9222
+
+# kill process. change 12345 from port in netstat
+taskkill /pid 12345 /f
+
+# remove folder debug browser edge
+rmdir /s /q "%USERPROFILE%\DebugBrowserEdge"

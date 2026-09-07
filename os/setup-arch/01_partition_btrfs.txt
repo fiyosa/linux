@@ -1,0 +1,165 @@
+# lsblk
+NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+sda           8:0    0 232.9G  0 disk
+├─sda1        8:1    0   500M  0 part
+├─sda2        8:2    0    16M  0 part
+├─sda3        8:3    0   150G  0 part
+
+# this is unallocated
+└─sda4        8:4    0  82.4G  0 part
+
+## info
+# sda1 partition efi - fat32
+# sda2 partition MSR windows - no fs
+# sda3 partition windows - ntfs
+# sda4 partition unallocated
+
+cfdisk /dev/sda
+# select patition-4 (unallocated) then choose 'new' and type 'Linux Filesystem'
+# select 'write' type 'yes' and quit
+
+# ==========================================
+
+# don't run if sda1 already existing efi windows
+mkfs.fat -F32 /dev/sda1
+
+mkfs.btrfs -f /dev/sda2
+
+mount /dev/sda2 /mnt
+
+btrfs subvolume create /mnt/@
+btrfs subvolume create /mnt/@home
+btrfs subvolume create /mnt/@log
+btrfs subvolume create /mnt/@cache
+btrfs subvolume create /mnt/@snapshots
+
+umount /mnt
+mount -o noatime,compress=zstd:1,space_cache=v2,subvol=@ /dev/sda2 /mnt
+mkdir -p /mnt/{boot/efi,home,var/log,var/cache,.snapshots,.btrfsroot}
+
+mount -o noatime,compress=zstd:1,space_cache=v2,subvol=@home /dev/sda2 /mnt/home
+mount -o noatime,compress=zstd:1,space_cache=v2,subvol=@log /dev/sda2 /mnt/var/log
+mount -o noatime,compress=zstd:1,space_cache=v2,subvol=@cache /dev/sda2 /mnt/var/cache
+mount -o noatime,compress=zstd:1,space_cache=v2,subvol=@snapshots /dev/sda2 /mnt/.snapshots
+
+mount -o subvolid=5 /dev/sda2 /mnt/.btrfsroot
+
+# run if sda1 already efi windows
+mount /dev/sda1 /mnt/boot/efi
+
+lsblk
+btrfs subvolume list /mnt
+
+archinstall
+
+# ==========================================
+
+# AFTER INSTALL ARCH LINUX
+
+sudo btrfs subvolume list /
+sudo pacman -S btop htop vim which snapper grub-btrfs snap-pac inotify-tools
+
+# Verifikasi grub-install sudah benar sebelum lanjut
+strings /boot/efi/EFI/GRUB/grubx64.efi | grep "(,gpt\|(,"
+# Kalau prefix salah menunjuk ke ESP, jalankan ulang manual
+sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --boot-directory=/boot
+
+sudo snapper -c root create-config /
+# if error existing subvolume .snapshots
+sudo umount /.snapshots
+sudo rm -r /.snapshots
+sudo snapper -c root create-config /
+sudo mount -a
+sudo snapper -c root list
+
+# ==========================================
+
+# CREATE SNAPSHOT ROOT
+
+# Wajib untuk fitur rollback snapper
+# Tanpa ini, "snapper rollback" akan error "Cannot detect ambit"
+# karena default subvolume masih mengarah ke top level (ID 5), bukan ke @
+sudo btrfs subvolume list /
+# or check with this
+SUBVOL_ID=$(sudo btrfs subvolume list / | grep " path @$" | awk '{print $2}')
+echo "ID subvolume @ is: $SUBVOL_ID"
+sudo btrfs subvolume set-default "$SUBVOL_ID" /
+
+# Cari ID untuk path "@" di hasil di atas, biasanya 256
+sudo btrfs subvolume set-default 256 /
+sudo btrfs subvolume get-default /
+# Harus menampilkan "path @", bukan "(FS_TREE)"
+
+sudo systemctl disable --now snapper-timeline.timer
+sudo systemctl enable --now snapper-cleanup.timer
+sudo systemctl enable --now grub-btrfsd
+
+sudo systemctl status snapper-timeline.timer
+sudo systemctl status snapper-cleanup.timer
+sudo systemctl status grub-btrfsd.service
+
+sudo snapper -c root create --description "baseline instalasi"
+sudo snapper -c root list
+
+sudo mkdir -p /boot/grub
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+
+# Verifikasi akhir sebelum reboot
+sudo grep -n "grub-btrfs.cfg" /boot/grub/grub.cfg
+
+# ==========================================
+
+# INSTALL PACKAGE ROLLBACK
+
+# first install yay from aur
+yay --version
+
+# just type "N" then enter
+yay -S snapper-rollback
+
+sudo vim /etc/snapper-rollback.conf
+# === start (change sda2 to real parition root)
+mountpoint = /.btrfsroot
+# === stop
+
+# ==========================================
+
+# ROLLBACK SNAPSHOT PERMANENT
+
+sudo snapper -c root list
+
+# rollback just subvolume "root". change "1" with id
+sudo snapper-rollback 1
+
+# change "1" with id (not recommended)
+sudo snapper -c root --ambit classic rollback 1
+
+# ==========================================
+
+# SCRIPT ADDITIONAL
+
+# show list snapshots
+sudo snapper -c root list
+
+# change total limit for cleanup
+sudo vim /etc/snapper/configs/root
+
+# check usage storage
+sudo btrfs filesystem usage /
+
+# check usage folder /.snapshots
+sudo btrfs filesystem du -s /.snapshots
+
+# check usage all folder in /.snapshots
+sudo btrfs filesystem du -s /.snapshots/*/snapshot
+
+# chech config btrfs
+sudo snapper -c root get-config
+
+# show list subvolume
+sudo btrfs subvolume list /
+
+# total snapshot
+sudo snapper -c root list | tail -n +3 | wc -l
+
+

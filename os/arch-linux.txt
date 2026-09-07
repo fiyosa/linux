@@ -16,6 +16,9 @@ pacman-key --init					# Init keyring
 pacman-key --populate archlinux		# populate keyring
 pacman -S archinstall				# install archinstall
 
+# update archinstall
+pacman -Sy archinstall
+
 lsblk # show all partition
 cfdisk /dev/sda # ex.: cfdisk /dev/{partition}
 
@@ -52,14 +55,15 @@ cfdisk /dev/sda # ex.: cfdisk /dev/{partition}
 fdisk -l # show detail partition
 lsblk
 
+## use file setup-arch/partition_btrfs.txt if you want to used btrfs
+
 # create file system
 mkfs.fat -F32 /dev/sda1
 mkfs.ext4 /dev/sda3
 
 # create mountpoints
 mount /dev/sda3 /mnt
-mkdir -p /mnt/boot
-mount /dev/sda1 /mnt/boot
+mount --mkdir /dev/sda1 /mnt/boot/efi
 
 # show
 lsblk -f
@@ -70,16 +74,33 @@ swapon /dev/sda2
 
 archinstall
 
+# connection wifi
+iwctl
+[iwd]# help
+[iwd]# device list
+[iwd]# station wlan0 scan
+[iwd]# station wlan0 get-networks
+[iwd]# station wlan0 connect "WIFI_NAME"
+[iwd]# exit
+ping -c 3 archlinux.org
+
+# Mirrors -> Singapore & Indonesia, Optional repo "multilab"
 # Disk configuration -> Pre-mounted configuration -> /mnt
-# Profile: driver -> vmware / virtualbox
+# Bootloader -> Grub, UKI "Disabled", Removable "Disabled"
+# Profile: driver "vmware / virtualbox", Greeter "sddm"
 # audio -> pipewire
-# Network configuration -> Use NetworkManager (default backend)
+# Network configuration -> Use Network Manager (iwd backend)
 # Optional repo: multilab
 
 =============================================
 
-pacman -Ss nama_package # search package on repo
-pacman -Qs nama_package # search package
+pacman -Sy # update database package local
+pacman -Syy # update database package local + force refresh database
+pacman -Syu # update database package local + upgrade package
+
+pacman -Ss nama_package  # search package on repo
+pacman -Qs nama_package  # search package on local
+pacman -Qi nama_package  # detail package
 pacman -Rns nama_package # delete package
 
 =============================================
@@ -121,14 +142,17 @@ cat /usr/lib/systemd/system/sshd.service
 
 =============================================
 
-# add suggestion command terminal
+# add suggestion package terminal
 
 sudo pacman -S pkgfile
 sudo pkgfile --update
-sudo vim ~/.bashrc
+
+vim ~/.bashrc
+# add
 source /usr/share/doc/pkgfile/command-not-found.bash
+
 source ~/.bashrc
-sudo reboot now
+exec bash
 
 =============================================
 
